@@ -1,0 +1,7 @@
+Material,Grade,Thickness_mm,Power_W,Speed_mm_s,Pulse_Width_ns,Frequency_kHz,Passes,Focus_Offset_mm,Edge_Quality_1to5,Depth_mm,Color,Heat_Affected_Zone_mm,Dimensional_Accuracy_mm,Success_Rating_1to5,Test_Date,Notes,Photo_Path
+Stainless Steel 304,304,1.0,30,100,280,30,1,0,0,0.0,,0.0,0.0,0,2025-01-13,,
+Stainless Steel 304,304,1.0,40,100,280,30,1,0,0,0.0,,0.0,0.0,0,,,
+Stainless Steel 304,304,1.0,50,100,280,30,1,0,0,0.0,,0.0,0.0,0,,,
+Brass,C360,1.5,25,150,280,30,1,0,0,0.0,,0.0,0.0,0,,,
+Aluminum,6061-T6,2.0,20,200,280,30,1,0,0,0.0,,0.0,0.0,0,,,
+Aluminum,6061-T6,2.0,30,200,280,30,1,0,0,0.0,,0.0,0.0,0,,,

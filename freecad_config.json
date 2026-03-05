@@ -1,0 +1,45 @@
+{
+  "name": "FreeCAD 4-Axis Configuration",
+  "description": "Configuration for helical 4-axis toolpath generation",
+
+  "geometry": {
+    "diameter": 50,
+    "length": 100,
+    "rotary_axis": "X"
+  },
+
+  "tool": {
+    "diameter": 6,
+    "type": "end_mill",
+    "flutes": 2,
+    "material": "carbide"
+  },
+
+  "machining": {
+    "stepover": 5,
+    "feed_rate": 500,
+    "plunge_rate": 250,
+    "spindle_rpm": 12000,
+    "spindle_direction": "CW",
+    "coolant": false
+  },
+
+  "output": {
+    "post_processor": "grbl",
+    "filename": "freecad_4axis_helix.gcode",
+    "coordinate_system": "G54",
+    "units": "metric"
+  },
+
+  "machine": {
+    "name": "CNC Router 4-Axis",
+    "controller": "GRBL",
+    "working_area": {
+      "x": 800,
+      "y": 800,
+      "z": 200,
+      "a": 360
+    },
+    "rapid_rate": 1000
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "mcpServers": {
+    "blender": {
+      "name": "Blender Integration Server",
+      "command": "wsl",
+      "args": [
+        "-d",
+        "Ubuntu",
+        "bash",
+        "-c",
+        "cd /mnt/f/Documents/CODE/Blender-MCP && python3 blender_mcp_server.py"
+      ],
+      "cwd": "f:\\Documents\\CODE\\Blender-MCP",
+      "transport": "stdio",
+      "description": "MCP server for Blender 3D operations including mesh creation, materials, animation, and rendering",
+      "capabilities": [
+        "tools",
+        "resources",
+        "prompts"
+      ],
+      "tools": [
+        "create_mesh_cube",
+        "create_mesh_sphere",
+        "create_mesh_cylinder",
+        "delete_object",
+        "move_object",
+        "scale_object",
+        "rotate_object",
+        "create_material",
+        "assign_material",
+        "set_material_property",
+        "clear_scene",
+        "list_objects",
+        "save_blend_file",
+        "open_blend_file",
+        "add_camera",
+        "add_light",
+        "set_keyframe",
+        "create_simple_animation",
+        "render_image",
+        "set_render_engine",
+        "set_render_resolution"
+      ],
+      "resources": [
+        "blender://scene-info",
+        "blender://object/{object_name}",
+        "blender://materials"
+      ],
+      "prompts": [
+        "create_basic_scene",
+        "animate_object_rotation",
+        "setup_product_render"
+      ]
+    }
+  }
+}

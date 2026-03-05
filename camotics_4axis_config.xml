@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CAMotics 4-Axis CNC Router Configuration -->
+<!-- Machine: Custom 4-axis rotary CNC router with XYZA axes -->
+<!-- Last Updated: 2025-11-13 -->
+
+<camotics>
+  <machine>
+    <name>4-Axis CNC Router (XYZA)</name>
+    <description>BlenderCAM HELIX strategy validation - 4th axis rotary</description>
+
+    <!-- Linear Axes Configuration -->
+    <axes>
+      <!-- X-Axis (Left-Right) -->
+      <axis name="X" min="-400" max="400" home="0" />
+
+      <!-- Y-Axis (Front-Back) -->
+      <axis name="Y" min="-400" max="400" home="0" />
+
+      <!-- Z-Axis (Up-Down) -->
+      <axis name="Z" min="-150" max="50" home="50" />
+
+      <!-- A-Axis (Rotary) - Configured for unlimited rotation -->
+      <axis name="A" min="-99999" max="99999" rotary="true" home="0" />
+    </axes>
+
+    <!-- Work Envelope -->
+    <work-envelope>
+      <x-length>800</x-length>  <!-- 800mm X travel -->
+      <y-length>800</y-length>  <!-- 800mm Y travel -->
+      <z-length>200</z-length>  <!-- 200mm Z travel -->
+    </work-envelope>
+
+    <!-- Tool Change Position -->
+    <tool-change>
+      <x>0</x>
+      <y>0</y>
+      <z>50</z>
+      <description>Safe tool change position above workpiece</description>
+    </tool-change>
+
+    <!-- Machine Zero / Home Position -->
+    <home>
+      <x>0</x>
+      <y>0</y>
+      <z>50</z>
+      <a>0</a>
+    </home>
+
+    <!-- Work Coordinate System (WCS) Offsets -->
+    <!-- G54 - Default work offset -->
+    <work-offset id="G54">
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+      <a>0</a>
+    </work-offset>
+
+    <!-- Rapid Speeds (mm/min) -->
+    <rapid-speeds>
+      <x>10000</x>  <!-- 10 m/min -->
+      <y>10000</y>
+      <z>5000</z>   <!-- 5 m/min (slower for safety) -->
+      <a>3600</a>   <!-- 360°/min = 10 deg/sec -->
+    </rapid-speeds>
+
+    <!-- Feed Rate Limits (mm/min) -->
+    <feed-limits>
+      <max>5000</max>
+      <min>1</min>
+    </feed-limits>
+
+    <!-- Spindle Configuration -->
+    <spindle>
+      <min-rpm>5000</min-rpm>
+      <max-rpm>24000</max-rpm>
+      <default-rpm>18000</default-rpm>
+    </spindle>
+
+    <!-- Tool Library -->
+    <tools>
+      <!-- Default End Mill (6mm) -->
+      <tool id="1">
+        <name>6mm End Mill (2 Flute)</name>
+        <type>end-mill</type>
+        <diameter>6.0</diameter>
+        <length>50</length>
+        <flutes>2</flutes>
+        <material>HSS</material>
+        <description>General purpose 2-flute end mill for wood/plastic</description>
+      </tool>
+
+      <!-- Ball End Mill (6mm) -->
+      <tool id="2">
+        <name>6mm Ball End Mill</name>
+        <type>ball-mill</type>
+        <diameter>6.0</diameter>
+        <length>50</length>
+        <flutes>2</flutes>
+        <material>Carbide</material>
+        <description>3D contouring and relief carving</description>
+      </tool>
+
+      <!-- V-Bit (60°) -->
+      <tool id="3">
+        <name>60° V-Bit (6mm shank)</name>
+        <type>v-bit</type>
+        <diameter>6.0</diameter>
+        <angle>60</angle>
+        <length>40</length>
+        <material>Carbide</material>
+        <description>Engraving and chamfering</description>
+      </tool>
+
+      <!-- Flat End Mill (3mm) -->
+      <tool id="4">
+        <name>3mm End Mill (2 Flute)</name>
+        <type>end-mill</type>
+        <diameter>3.0</diameter>
+        <length>38</length>
+        <flutes>2</flutes>
+        <material>Carbide</material>
+        <description>Fine detail work</description>
+      </tool>
+    </tools>
+
+    <!-- Safety Settings -->
+    <safety>
+      <collision-detection enabled="true" />
+      <soft-limits enabled="true" />
+      <emergency-stop enabled="true" />
+      <feed-hold enabled="true" />
+    </safety>
+
+    <!-- Simulation Settings -->
+    <simulation>
+      <resolution>high</resolution>  <!-- high, medium, low -->
+      <show-tool enabled="true" />
+      <show-workpiece enabled="true" />
+      <show-toolpath enabled="true" />
+      <animate enabled="true" />
+      <animation-speed>1.0</animation-speed>  <!-- 1.0 = real-time -->
+    </simulation>
+
+    <!-- Units -->
+    <units>metric</units>  <!-- metric (mm) or imperial (inches) -->
+
+    <!-- Controller Type -->
+    <controller>
+      <type>GRBL</type>
+      <version>1.1</version>
+      <buffer-size>127</buffer-size>
+    </controller>
+  </machine>
+
+  <!-- Default Workpiece for HELIX Testing -->
+  <workpiece>
+    <type>cylinder</type>
+    <diameter>50</diameter>  <!-- mm -->
+    <length>100</length>     <!-- mm -->
+    <material>wood</material>
+    <position>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+      <a>0</a>
+    </position>
+  </workpiece>
+</camotics>

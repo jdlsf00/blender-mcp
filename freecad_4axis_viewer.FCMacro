@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""
+FreeCAD 4-Axis G-code Viewer Macro
+
+Usage:
+1. Open FreeCAD
+2. Macro > Macros... > Select this file > Execute
+3. Select G-code file when prompted
+"""
+
+import FreeCAD
+import Part
+from PySide import QtGui
+import os
+
+
+def parse_gcode_points(gcode_file):
+    """Parse G-code and extract XYZ points"""
+    print(f"Loading: {gcode_file}")
+
+    points = []
+    x, y, z = 0.0, 0.0, 0.0
+
+    with open(gcode_file, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith(';') or line.startswith('('):
+                continue
+
+            if line.startswith('G0') or line.startswith('G1'):
+                parts = line.split()
+
+                for part in parts[1:]:
+                    if len(part) < 2:
+                        continue
+                    axis = part[0].upper()
+                    try:
+                        val = float(part[1:])
+                        if axis == 'X':
+                            x = val
+                        elif axis == 'Y':
+                            # Y is radial distance in cylindrical coords
+                            y = val
+                        elif axis == 'Z':
+                            z = val
+                    except ValueError:
+                        pass
+
+                points.append((x, y, z))
+
+    print(f"Loaded {len(points)} points")
+    return points
+
+
+def create_cylinder_stock(diameter, length):
+    """Create cylinder stock"""
+    print("Creating cylinder stock...")
+
+    cylinder = FreeCAD.ActiveDocument.addObject("Part::Cylinder", "Stock")
+    cylinder.Radius = diameter / 2.0
+    cylinder.Height = length
+    cylinder.Placement.Rotation = FreeCAD.Rotation(FreeCAD.Vector(0, 1, 0), 90)
+    cylinder.Placement.Base = FreeCAD.Vector(0, 0, -diameter/2)
+
+    # Visual properties
+    cylinder.ViewObject.Transparency = 60
+    cylinder.ViewObject.ShapeColor = (0.8, 0.6, 0.4)
+
+    return cylinder
+
+
+def create_toolpath_from_points(points):
+    """Create toolpath visualization from points"""
+    print("Creating toolpath...")
+
+    if len(points) < 2:
+        print("Not enough points for toolpath")
+        return None
+
+    edges = []
+    skipped = 0
+
+    for i in range(len(points) - 1):
+        p1 = FreeCAD.Vector(points[i][0], points[i][2], points[i][1])
+        p2 = FreeCAD.Vector(points[i+1][0], points[i+1][2], points[i+1][1])
+
+        # Skip if points are identical (would cause "Line through identical points" error)
+        if p1.distanceToPoint(p2) < 0.001:  # Less than 0.001mm apart
+            skipped += 1
+            continue
+
+        edge = Part.makeLine(p1, p2)
+        edges.append(edge)
+
+    if skipped > 0:
+        print(f"Skipped {skipped} duplicate points")
+
+    if edges:
+        wire = Part.Wire(edges)
+        toolpath = FreeCAD.ActiveDocument.addObject("Part::Feature", "Toolpath")
+        toolpath.Shape = wire
+        toolpath.ViewObject.LineColor = (1.0, 0.0, 0.0)
+        toolpath.ViewObject.LineWidth = 3.0
+        print(f"Created toolpath with {len(edges)} segments from {len(points)} points")
+        return toolpath
+
+    return None
+
+
+def main():
+    """Main visualization function"""
+    # File dialog to select G-code
+    file_filter = "G-code Files (*.gcode *.nc *.ngc);;All Files (*.*)"
+    default_dir = os.path.join(os.path.dirname(__file__), "test_output")
+
+    gcode_file, _ = QtGui.QFileDialog.getOpenFileName(
+        None,
+        "Select G-code File",
+        default_dir,
+        file_filter
+    )
+
+    if not gcode_file:
+        print("No file selected")
+        return
+
+    print("\n" + "="*60)
+    print("  FreeCAD 4-Axis G-code Viewer")
+    print("="*60)
+
+    # Create new document
+    doc_name = os.path.splitext(os.path.basename(gcode_file))[0]
+    FreeCAD.newDocument(doc_name)
+
+    # Parse G-code
+    points = parse_gcode_points(gcode_file)
+
+    # Create stock (50mm diameter, 100mm length default)
+    stock = create_cylinder_stock(50.0, 100.0)
+
+    # Create toolpath
+    toolpath = create_toolpath_from_points(points)
+
+    # Recompute and fit view
+    FreeCAD.ActiveDocument.recompute()
+    FreeCAD.Gui.SendMsgToActiveView("ViewFit")
+    FreeCAD.Gui.activeDocument().activeView().viewIsometric()
+
+    print("\n✅ Visualization complete!")
+    print(f"   Stock: {stock.Label}")
+    if toolpath:
+        print(f"   Toolpath: {toolpath.Label}")
+
+
+# Run if executed as macro
+if __name__ == "__main__":
+    main()

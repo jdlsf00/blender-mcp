@@ -1,0 +1,23 @@
+{
+  "name": "Test3DRelief_001",
+  "generated_date": "2025-11-13T00:05:58.560906",
+  "blender_version": "4.5.3 LTS",
+  "dimensions": {
+    "x": 50.34,
+    "y": 50.35,
+    "z": 80.76
+  },
+  "vertices": 256,
+  "recommended_strategies": [
+    "HELIX"
+  ],
+  "test_materials": [
+    "Hardwood",
+    "Stainless steel",
+    "Leather"
+  ],
+  "notes": "",
+  "complexity_level": 3,
+  "test_purpose": "Complex geometry - multi-pass depth control",
+  "estimated_runtime": "20-45 minutes"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "TestCone_001",
+  "generated_date": "2025-11-13T00:05:58.557180",
+  "blender_version": "4.5.3 LTS",
+  "dimensions": {
+    "x": 50.0,
+    "y": 50.0,
+    "z": 100.0
+  },
+  "vertices": 64,
+  "recommended_strategies": [
+    "HELIX",
+    "PARALLELR"
+  ],
+  "test_materials": [
+    "Softwood",
+    "Brass",
+    "HDPE"
+  ],
+  "notes": "",
+  "complexity_level": 2,
+  "test_purpose": "Strategy testing - compare HELIX vs PARALLELR on variable diameter",
+  "estimated_runtime": "8-15 minutes"
+}

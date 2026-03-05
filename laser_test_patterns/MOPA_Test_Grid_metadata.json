@@ -1,0 +1,293 @@
+{
+  "test_type": "mopa_power_speed_matrix",
+  "generated_date": "2025-11-13T00:10:29.442243",
+  "grid_size": "5x5",
+  "square_size_mm": 10.0,
+  "power_range_w": [
+    20,
+    80
+  ],
+  "speed_range_mm_s": [
+    50,
+    200
+  ],
+  "pulse_width_ns": 280,
+  "frequency_khz": 30,
+  "squares": [
+    {
+      "serial": 1,
+      "power_w": 20.0,
+      "speed_mm_s": 50.0,
+      "position_mm": {
+        "x": -24.0,
+        "y": 24.0
+      },
+      "row": 0,
+      "col": 0
+    },
+    {
+      "serial": 2,
+      "power_w": 35.0,
+      "speed_mm_s": 50.0,
+      "position_mm": {
+        "x": -12.0,
+        "y": 24.0
+      },
+      "row": 0,
+      "col": 1
+    },
+    {
+      "serial": 3,
+      "power_w": 50.0,
+      "speed_mm_s": 50.0,
+      "position_mm": {
+        "x": 0.0,
+        "y": 24.0
+      },
+      "row": 0,
+      "col": 2
+    },
+    {
+      "serial": 4,
+      "power_w": 65.0,
+      "speed_mm_s": 50.0,
+      "position_mm": {
+        "x": 12.0,
+        "y": 24.0
+      },
+      "row": 0,
+      "col": 3
+    },
+    {
+      "serial": 5,
+      "power_w": 80.0,
+      "speed_mm_s": 50.0,
+      "position_mm": {
+        "x": 24.0,
+        "y": 24.0
+      },
+      "row": 0,
+      "col": 4
+    },
+    {
+      "serial": 6,
+      "power_w": 20.0,
+      "speed_mm_s": 87.5,
+      "position_mm": {
+        "x": -24.0,
+        "y": 12.0
+      },
+      "row": 1,
+      "col": 0
+    },
+    {
+      "serial": 7,
+      "power_w": 35.0,
+      "speed_mm_s": 87.5,
+      "position_mm": {
+        "x": -12.0,
+        "y": 12.0
+      },
+      "row": 1,
+      "col": 1
+    },
+    {
+      "serial": 8,
+      "power_w": 50.0,
+      "speed_mm_s": 87.5,
+      "position_mm": {
+        "x": 0.0,
+        "y": 12.0
+      },
+      "row": 1,
+      "col": 2
+    },
+    {
+      "serial": 9,
+      "power_w": 65.0,
+      "speed_mm_s": 87.5,
+      "position_mm": {
+        "x": 12.0,
+        "y": 12.0
+      },
+      "row": 1,
+      "col": 3
+    },
+    {
+      "serial": 10,
+      "power_w": 80.0,
+      "speed_mm_s": 87.5,
+      "position_mm": {
+        "x": 24.0,
+        "y": 12.0
+      },
+      "row": 1,
+      "col": 4
+    },
+    {
+      "serial": 11,
+      "power_w": 20.0,
+      "speed_mm_s": 125.0,
+      "position_mm": {
+        "x": -24.0,
+        "y": 0.0
+      },
+      "row": 2,
+      "col": 0
+    },
+    {
+      "serial": 12,
+      "power_w": 35.0,
+      "speed_mm_s": 125.0,
+      "position_mm": {
+        "x": -12.0,
+        "y": 0.0
+      },
+      "row": 2,
+      "col": 1
+    },
+    {
+      "serial": 13,
+      "power_w": 50.0,
+      "speed_mm_s": 125.0,
+      "position_mm": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "row": 2,
+      "col": 2
+    },
+    {
+      "serial": 14,
+      "power_w": 65.0,
+      "speed_mm_s": 125.0,
+      "position_mm": {
+        "x": 12.0,
+        "y": 0.0
+      },
+      "row": 2,
+      "col": 3
+    },
+    {
+      "serial": 15,
+      "power_w": 80.0,
+      "speed_mm_s": 125.0,
+      "position_mm": {
+        "x": 24.0,
+        "y": 0.0
+      },
+      "row": 2,
+      "col": 4
+    },
+    {
+      "serial": 16,
+      "power_w": 20.0,
+      "speed_mm_s": 162.5,
+      "position_mm": {
+        "x": -24.0,
+        "y": -12.0
+      },
+      "row": 3,
+      "col": 0
+    },
+    {
+      "serial": 17,
+      "power_w": 35.0,
+      "speed_mm_s": 162.5,
+      "position_mm": {
+        "x": -12.0,
+        "y": -12.0
+      },
+      "row": 3,
+      "col": 1
+    },
+    {
+      "serial": 18,
+      "power_w": 50.0,
+      "speed_mm_s": 162.5,
+      "position_mm": {
+        "x": 0.0,
+        "y": -12.0
+      },
+      "row": 3,
+      "col": 2
+    },
+    {
+      "serial": 19,
+      "power_w": 65.0,
+      "speed_mm_s": 162.5,
+      "position_mm": {
+        "x": 12.0,
+        "y": -12.0
+      },
+      "row": 3,
+      "col": 3
+    },
+    {
+      "serial": 20,
+      "power_w": 80.0,
+      "speed_mm_s": 162.5,
+      "position_mm": {
+        "x": 24.0,
+        "y": -12.0
+      },
+      "row": 3,
+      "col": 4
+    },
+    {
+      "serial": 21,
+      "power_w": 20.0,
+      "speed_mm_s": 200.0,
+      "position_mm": {
+        "x": -24.0,
+        "y": -24.0
+      },
+      "row": 4,
+      "col": 0
+    },
+    {
+      "serial": 22,
+      "power_w": 35.0,
+      "speed_mm_s": 200.0,
+      "position_mm": {
+        "x": -12.0,
+        "y": -24.0
+      },
+      "row": 4,
+      "col": 1
+    },
+    {
+      "serial": 23,
+      "power_w": 50.0,
+      "speed_mm_s": 200.0,
+      "position_mm": {
+        "x": 0.0,
+        "y": -24.0
+      },
+      "row": 4,
+      "col": 2
+    },
+    {
+      "serial": 24,
+      "power_w": 65.0,
+      "speed_mm_s": 200.0,
+      "position_mm": {
+        "x": 12.0,
+        "y": -24.0
+      },
+      "row": 4,
+      "col": 3
+    },
+    {
+      "serial": 25,
+      "power_w": 80.0,
+      "speed_mm_s": 200.0,
+      "position_mm": {
+        "x": 24.0,
+        "y": -24.0
+      },
+      "row": 4,
+      "col": 4
+    }
+  ]
+}

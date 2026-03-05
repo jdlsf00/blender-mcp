@@ -1,0 +1,8 @@
+Material,Grade,Thickness_mm,Power_Percent,Speed_mm_s,Passes,Focus_Offset_mm,Air_Assist,Burn_Depth_mm,Char_Width_mm,Edge_Sharpness_1to5,Smoke_Level,Dimensional_Accuracy_mm,Success_Rating_1to5,Test_Date,Notes,Photo_Path
+Pine Wood,Softwood,6.0,50,100,1,-1.0,Yes,0.0,0.0,0,,0.0,0,2025-01-13,,
+Pine Wood,Softwood,6.0,70,100,1,-1.0,Yes,0.0,0.0,0,,0.0,0,,,
+Oak Wood,Hardwood,6.0,60,80,1,-1.0,Yes,0.0,0.0,0,,0.0,0,,,
+Acrylic,Clear 3mm,3.0,80,20,1,-2.0,Yes,0.0,0.0,0,,0.0,0,,,
+Acrylic,Clear 3mm,3.0,90,15,1,-2.0,Yes,0.0,0.0,0,,0.0,0,,,
+Leather,Full Grain,2.0,40,120,1,-0.5,No,0.0,0.0,0,,0.0,0,,,
+Leather,Full Grain,2.0,50,120,1,-0.5,No,0.0,0.0,0,,0.0,0,,,

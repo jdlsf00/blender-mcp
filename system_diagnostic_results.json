@@ -1,0 +1,118 @@
+{
+  "system_info": {
+    "os": "Linux",
+    "os_version": "#1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025",
+    "python_version": "3.12.3",
+    "architecture": "64bit",
+    "machine": "x86_64",
+    "wsl_environment": true,
+    "wsl_info": "Linux version 6.6.87.2-microsoft-standard-WSL2 (root@439a258ad544) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025"
+  },
+  "blender_status": {
+    "installations_found": 2,
+    "versions": [
+      {
+        "path": "/mnt/c/Program Files/Blender Foundation/Blender 4.5/blender.exe",
+        "version": "Blender 4.5.3 LTS",
+        "accessible": true
+      },
+      {
+        "path": "/mnt/c/Program Files/Blender Foundation/Blender 4.2/blender.exe",
+        "version": "Blender 4.2.2 LTS",
+        "accessible": true
+      }
+    ],
+    "latest_available": {
+      "path": "/mnt/c/Program Files/Blender Foundation/Blender 4.5/blender.exe",
+      "version": "Blender 4.5.3 LTS",
+      "accessible": true
+    }
+  },
+  "vscode_status": {
+    "mcp_config": {
+      "mcpServers": {
+        "blender": {
+          "name": "Blender Integration Server",
+          "command": "wsl",
+          "args": [
+            "-d",
+            "Ubuntu",
+            "bash",
+            "-c",
+            "cd /mnt/f/Documents/CODE/Blender-MCP && source blender-mcp-env/bin/activate && python3 blender_mcp_server.py"
+          ],
+          "cwd": "f:\\Documents\\CODE\\Blender-MCP",
+          "transport": "stdio",
+          "description": "MCP server for Blender 3D operations including mesh creation, materials, animation, and rendering",
+          "capabilities": [
+            "tools",
+            "resources",
+            "prompts"
+          ],
+          "tools": [
+            "create_mesh_cube",
+            "create_mesh_sphere",
+            "create_mesh_cylinder",
+            "delete_object",
+            "move_object",
+            "scale_object",
+            "rotate_object",
+            "create_material",
+            "assign_material",
+            "set_material_property",
+            "clear_scene",
+            "list_objects",
+            "save_blend_file",
+            "open_blend_file",
+            "add_camera",
+            "add_light",
+            "set_keyframe",
+            "create_simple_animation",
+            "render_image",
+            "set_render_engine",
+            "set_render_resolution"
+          ],
+          "resources": [
+            "blender://scene-info",
+            "blender://object/{object_name}",
+            "blender://materials"
+          ],
+          "prompts": [
+            "create_basic_scene",
+            "animate_object_rotation",
+            "setup_product_render"
+          ]
+        }
+      }
+    }
+  },
+  "mcp_server_status": {
+    "file_exists": true,
+    "tool_count": 0,
+    "imports": {
+      "FastMCP": false,
+      "bpy_operations": true,
+      "async_support": false
+    }
+  },
+  "github_copilot_status": {
+    "vscode_accessible": true,
+    "extensions_found": false
+  },
+  "integration_readiness": {
+    "checks": {
+      "Blender 4.5+ Available": true,
+      "MCP Server Exists": true,
+      "MCP Tools Defined": false,
+      "VS Code MCP Config": true,
+      "GitHub Copilot Present": false
+    },
+    "passed": 3,
+    "total": 5,
+    "percentage": 60.0
+  },
+  "recommendations": [
+    "Install MCP package: pip install mcp",
+    "Install GitHub Copilot Pro extension in VS Code"
+  ]
+}

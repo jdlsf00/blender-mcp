@@ -1,0 +1,118 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-11-13",
+  "description": "Material testing database for MOPA laser, Diode laser, and CNC router",
+  "tools": {
+    "mopa_fiber_laser": {
+      "name": "MOPA Fiber Laser",
+      "wavelength": "1064nm",
+      "power_range": "20-80W",
+      "focus_materials": ["metals", "coated_materials"],
+      "tested_materials": []
+    },
+    "diode_laser": {
+      "name": "Diode Laser",
+      "wavelength": "445nm",
+      "power_range": "5-20W",
+      "focus_materials": ["organics", "plastics", "coated_metals"],
+      "tested_materials": []
+    },
+    "cnc_router": {
+      "name": "4-Axis CNC Router",
+      "axes": "XYZA",
+      "spindle_rpm": "5000-20000",
+      "focus_materials": ["wood", "plastics", "soft_metals"],
+      "tested_materials": []
+    }
+  },
+  "material_templates": {
+    "mopa_laser_metal": {
+      "tool": "mopa_fiber_laser",
+      "material_name": "",
+      "material_grade": "",
+      "thickness_mm": 0,
+      "supplier": "",
+      "cost_per_piece": 0,
+      "test_date": "",
+      "test_pattern": "power_speed_matrix_5x5",
+      "settings": {
+        "power_w": 0,
+        "speed_mm_s": 0,
+        "pulse_width_ns": 280,
+        "frequency_khz": 30,
+        "passes": 1,
+        "focus_offset_mm": 0
+      },
+      "results": {
+        "edge_quality": 0,
+        "depth_mm": 0,
+        "color_achieved": "",
+        "heat_affected_zone_mm": 0,
+        "dimensional_accuracy_mm": 0,
+        "success_rating": 0
+      },
+      "notes": "",
+      "photo_paths": []
+    },
+    "diode_laser_organic": {
+      "tool": "diode_laser",
+      "material_name": "",
+      "material_grade": "",
+      "thickness_mm": 0,
+      "supplier": "",
+      "cost_per_piece": 0,
+      "test_date": "",
+      "test_pattern": "power_gradation_test",
+      "settings": {
+        "power_percent": 0,
+        "speed_mm_s": 0,
+        "passes": 1,
+        "focus_offset_mm": 0,
+        "air_assist": false
+      },
+      "results": {
+        "burn_depth_mm": 0,
+        "char_width_mm": 0,
+        "edge_sharpness": 0,
+        "smoke_level": "",
+        "dimensional_accuracy_mm": 0,
+        "success_rating": 0
+      },
+      "notes": "",
+      "photo_paths": []
+    },
+    "cnc_router_material": {
+      "tool": "cnc_router",
+      "material_name": "",
+      "material_grade": "",
+      "dimensions": {
+        "diameter_mm": 0,
+        "length_mm": 0
+      },
+      "supplier": "",
+      "cost_per_piece": 0,
+      "test_date": "",
+      "test_part": "TestCylinder_001",
+      "settings": {
+        "spindle_rpm": 0,
+        "feed_rate_mm_min": 0,
+        "plunge_rate_mm_min": 0,
+        "depth_per_pass_mm": 0,
+        "cutter_type": "END",
+        "cutter_diameter_mm": 0,
+        "cutter_flutes": 0,
+        "coolant": false
+      },
+      "results": {
+        "surface_finish": 0,
+        "dimensional_accuracy_mm": 0,
+        "edge_quality": 0,
+        "chip_evacuation": "",
+        "tool_wear": "",
+        "success_rating": 0
+      },
+      "notes": "",
+      "photo_paths": []
+    }
+  }
+}

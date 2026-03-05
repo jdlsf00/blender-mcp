@@ -1,0 +1,25 @@
+{
+      "units": "metric",
+      "resolution-mode": "medium",
+      "resolution": 1,
+      "tools": {
+        "1": {
+          "units": "metric",
+          "shape": "cylindrical",
+          "length": 49.980016,
+          "diameter": 6,
+          "description": ""
+        }
+      },
+      "workpiece": {
+        "automatic": true,
+        "margin": 5,
+        "bounds": {
+          "min": [-55070.14245, -792.81265, -26001.4923],
+          "max": [57107.25145, 16218.48165, 0]
+        }
+      },
+      "files": [
+        "helix_test_4axis.gcode"
+      ]
+    }

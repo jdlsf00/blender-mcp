@@ -1,0 +1,56 @@
+{
+  "test_type": "diode_power_gradation",
+  "generated_date": "2025-11-13T00:10:43.540257",
+  "design_type": "star",
+  "power_levels_percent": [
+    10,
+    30,
+    50,
+    70,
+    90
+  ],
+  "speed_mm_s": 120,
+  "focus_offset_mm": -1.0,
+  "designs": [
+    {
+      "power_percent": 10,
+      "position_mm": {
+        "x": -40.0,
+        "y": 0
+      },
+      "design_name": "Star_P10pct"
+    },
+    {
+      "power_percent": 30,
+      "position_mm": {
+        "x": -20.0,
+        "y": 0
+      },
+      "design_name": "Star_P30pct"
+    },
+    {
+      "power_percent": 50,
+      "position_mm": {
+        "x": 0.0,
+        "y": 0
+      },
+      "design_name": "Star_P50pct"
+    },
+    {
+      "power_percent": 70,
+      "position_mm": {
+        "x": 20.0,
+        "y": 0
+      },
+      "design_name": "Star_P70pct"
+    },
+    {
+      "power_percent": 90,
+      "position_mm": {
+        "x": 40.0,
+        "y": 0
+      },
+      "design_name": "Star_P90pct"
+    }
+  ]
+}

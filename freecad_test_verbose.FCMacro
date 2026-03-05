@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""
+FreeCAD 4-Axis Simple Test Macro
+
+Simplified version with detailed error reporting
+"""
+
+import FreeCAD
+import Part
+from PySide import QtGui
+import os
+import traceback
+
+
+def main():
+    """Main test function with verbose output"""
+    try:
+        print("\n" + "="*60)
+        print("  FreeCAD 4-Axis Test Macro - Starting...")
+        print("="*60)
+
+        # Step 1: File dialog
+        print("\n[1/5] Opening file dialog...")
+        default_dir = r"F:\Documents\CODE\Blender-MCP\test_output"
+
+        if not os.path.exists(default_dir):
+            print(f"⚠️  Default directory not found: {default_dir}")
+            default_dir = os.path.expanduser("~")
+
+        file_filter = "G-code Files (*.gcode *.nc *.ngc);;All Files (*.*)"
+        gcode_file, _ = QtGui.QFileDialog.getOpenFileName(
+            None,
+            "Select G-code File",
+            default_dir,
+            file_filter
+        )
+
+        if not gcode_file:
+            print("❌ No file selected - Cancelled by user")
+            return
+
+        print(f"✓ File selected: {gcode_file}")
+
+        # Step 2: Check file exists
+        print("\n[2/5] Checking file...")
+        if not os.path.exists(gcode_file):
+            print(f"❌ File not found: {gcode_file}")
+            return
+
+        file_size = os.path.getsize(gcode_file)
+        print(f"✓ File exists, size: {file_size} bytes")
+
+        # Step 3: Create document
+        print("\n[3/5] Creating FreeCAD document...")
+        doc_name = os.path.splitext(os.path.basename(gcode_file))[0]
+        doc = FreeCAD.newDocument(doc_name)
+        print(f"✓ Document created: {doc.Name}")
+
+        # Step 4: Parse G-code
+        print("\n[4/5] Parsing G-code...")
+        points = []
+        x, y, z = 0.0, 0.0, 0.0
+        line_count = 0
+
+        with open(gcode_file, 'r') as f:
+            for line in f:
+                line_count += 1
+                line = line.strip()
+                if not line or line.startswith(';') or line.startswith('('):
+                    continue
+
+                if line.startswith('G0') or line.startswith('G1'):
+                    parts = line.split()
+                    for part in parts[1:]:
+                        if len(part) < 2:
+                            continue
+                        axis = part[0].upper()
+                        try:
+                            val = float(part[1:])
+                            if axis == 'X':
+                                x = val
+                            elif axis == 'Y':
+                                y = val
+                            elif axis == 'Z':
+                                z = val
+                        except ValueError:
+                            pass
+
+                    points.append((x, y, z))
+
+        print(f"✓ Parsed {line_count} lines")
+        print(f"✓ Found {len(points)} toolpath points")
+
+        if len(points) == 0:
+            print("❌ No valid G-code points found!")
+            return
+
+        # Show first few points
+        print(f"   First point: X{points[0][0]:.2f} Y{points[0][1]:.2f} Z{points[0][2]:.2f}")
+        if len(points) > 1:
+            print(f"   Last point:  X{points[-1][0]:.2f} Y{points[-1][1]:.2f} Z{points[-1][2]:.2f}")
+
+        # Step 5: Create geometry
+        print("\n[5/5] Creating 3D geometry...")
+
+        # Create cylinder stock
+        print("   Creating cylinder stock...")
+        cylinder = doc.addObject("Part::Cylinder", "Stock")
+        cylinder.Radius = 25.0  # 50mm diameter
+        cylinder.Height = 100.0
+        cylinder.Placement.Rotation = FreeCAD.Rotation(FreeCAD.Vector(0, 1, 0), 90)
+        cylinder.Placement.Base = FreeCAD.Vector(0, 0, -25.0)
+        cylinder.ViewObject.Transparency = 60
+        cylinder.ViewObject.ShapeColor = (0.8, 0.6, 0.4)
+        print(f"   ✓ Stock created: {cylinder.Label}")
+
+        # Create toolpath
+        print("   Creating toolpath...")
+        edges = []
+        skipped = 0
+
+        for i in range(min(len(points) - 1, 1000)):  # Limit to first 1000 segments for speed
+            p1 = FreeCAD.Vector(points[i][0], points[i][2], points[i][1])
+            p2 = FreeCAD.Vector(points[i+1][0], points[i+1][2], points[i+1][1])
+
+            # Skip if points are identical
+            if p1.distanceToPoint(p2) < 0.001:
+                skipped += 1
+                continue
+
+            edge = Part.makeLine(p1, p2)
+            edges.append(edge)
+
+        if skipped > 0:
+            print(f"   Skipped {skipped} duplicate points")
+
+        if edges:
+            wire = Part.Wire(edges)
+            toolpath = doc.addObject("Part::Feature", "Toolpath")
+            toolpath.Shape = wire
+            toolpath.ViewObject.LineColor = (1.0, 0.0, 0.0)
+            toolpath.ViewObject.LineWidth = 3.0
+            print(f"   ✓ Toolpath created: {toolpath.Label} ({len(edges)} segments)")
+        else:
+            print("   ⚠️  No toolpath edges created")
+
+        # Recompute and fit view
+        print("\n   Recomputing document...")
+        doc.recompute()
+
+        print("   Fitting view...")
+        FreeCAD.Gui.SendMsgToActiveView("ViewFit")
+        FreeCAD.Gui.activeDocument().activeView().viewIsometric()
+
+        print("\n" + "="*60)
+        print("  ✅ SUCCESS - Visualization Complete!")
+        print("="*60)
+        print(f"\n   Document: {doc.Name}")
+        print(f"   Objects: {len(doc.Objects)}")
+        print(f"   - {cylinder.Label} (orange cylinder)")
+        if toolpath:
+            print(f"   - {toolpath.Label} (red path)")
+        print("\n   You should now see:")
+        print("   • Orange cylinder in 3D view")
+        print("   • Red toolpath line")
+        print("   • Objects listed in Model tree (left sidebar)")
+
+    except Exception as e:
+        print("\n" + "="*60)
+        print("  ❌ ERROR OCCURRED")
+        print("="*60)
+        print(f"\nError: {str(e)}")
+        print("\nFull traceback:")
+        traceback.print_exc()
+        print("\n" + "="*60)
+
+
+# Run
+if __name__ == "__main__":
+    main()

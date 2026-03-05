@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+blender-mcp-env/
+
+# Blender
+*.blend1
+
+# Dependencies
+_blender_deps/
+get-pip.py
+
+# Generated output
+test_output/
+
+# Environment
+.env
+.env.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/settings.json

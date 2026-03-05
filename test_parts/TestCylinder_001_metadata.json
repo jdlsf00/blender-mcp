@@ -1,0 +1,23 @@
+{
+  "name": "TestCylinder_001",
+  "generated_date": "2025-11-13T00:05:58.553855",
+  "blender_version": "4.5.3 LTS",
+  "dimensions": {
+    "x": 50.0,
+    "y": 50.0,
+    "z": 100.0
+  },
+  "vertices": 64,
+  "recommended_strategies": [
+    "HELIX"
+  ],
+  "test_materials": [
+    "Scrap wood",
+    "Aluminum",
+    "Acrylic"
+  ],
+  "notes": "",
+  "complexity_level": 1,
+  "test_purpose": "Geometry validation - verify A-axis rotation accuracy",
+  "estimated_runtime": "5-10 minutes"
+}

@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "generated": "2025-11-14T21:00:03.848651",
+    "philosophy": "As Above, So Below - Hermetic Principles in Manufacturing",
+    "purpose": "Test full capabilities of MOPA laser + CNC router",
+    "wisdom_sources": "79,953 embeddings from 67 spiritual books",
+    "total_tests": 7
+  },
+  "hermetic_principles": {
+    "mentalism": "THE ALL is MIND; The Universe is Mental",
+    "correspondence": "As above, so below; as below, so above",
+    "vibration": "Nothing rests; everything moves; everything vibrates",
+    "polarity": "Everything is Dual; everything has poles",
+    "rhythm": "Everything flows, out and in; everything has its tides",
+    "cause_effect": "Every Cause has its Effect; every Effect has its Cause",
+    "gender": "Gender is in everything; everything has Masculine and Feminine Principles"
+  },
+  "test_patterns": {
+    "2d_laser": [
+      {
+        "name": "geometric_calibration",
+        "type": "2D_laser_engrave_cut",
+        "difficulty": "basic",
+        "prompt": {
+          "adobe_firefly": "Sacred geometry calibration grid, black and white line art, precise circles, squares, hexagons arranged in perfect proportion, golden ratio divisions, minimalist technical drawing style, high contrast, vector-ready",
+          "style": "Technical line art, monochrome, precise geometry",
+          "resolution": "300 DPI minimum",
+          "aspect_ratio": "Square (1:1)"
+        },
+        "manufacturing": {
+          "material": "Brass sheet 0.5mm or cardstock",
+          "laser_mode": "MOPA color marking + vector cut",
+          "layers": {
+            "blue_engrave": "Fill patterns, fine detail",
+            "red_cut": "Outer perimeter, precise squares/circles"
+          },
+          "settings": {
+            "engrave_speed": "1200 mm/s",
+            "engrave_power": "18%",
+            "cut_speed": "20 mm/s",
+            "cut_power": "80%",
+            "passes": "2-3 for clean cut"
+          },
+          "size": "50mm × 50mm"
+        },
+        "validation": "Tests: Line precision, circle roundness, corner sharpness, power consistency"
+      },
+      {
+        "name": "tree_of_life_kabbalah",
+        "type": "2D_laser_engrave",
+        "difficulty": "medium",
+        "prompt": {
+          "adobe_firefly": "Kabbalistic Tree of Life diagram, ten sephirot connected by 22 paths, mystical Hebrew letters, sacred geometry, black background with golden glowing lines and nodes, esoteric symbolism, ornate border with intricate patterns, occult manuscript style, high detail",
+          "wisdom_theme": "As above, so below; as below, so above",
+          "symbols": "10 sephiroth, 22 paths, Hebrew letters (Aleph to Tav)",
+          "style": "Mystical illuminated manuscript, gold on black",
+          "resolution": "600 DPI",
+          "aspect_ratio": "Portrait (2:3)"
+        },
+        "manufacturing": {
+          "material": "Anodized aluminum (black) or stainless steel",
+          "laser_mode": "MOPA deep engraving + color",
+          "technique": "Remove anodizing to reveal bright metal underneath",
+          "settings": {
+            "speed": "900 mm/s",
+            "power": "22%",
+            "frequency": "80 kHz",
+            "passes": "1 (deep engrave)",
+            "grayscale": "Dithered for depth variation"
+          },
+          "size": "75mm × 110mm",
+          "finish": "High contrast: dark background, bright symbols"
+        },
+        "validation": "Tests: Fine line detail, Hebrew letter legibility, depth consistency, complex pattern fidelity"
+      },
+      {
+        "name": "mandala_holographic",
+        "type": "2D_laser_diffraction",
+        "difficulty": "advanced",
+        "prompt": {
+          "adobe_firefly": "Intricate mandala with concentric circles, sacred lotus petals, Sri Yantra triangles at center, gradient from white center to deep black outer rings, smooth transitions, radial symmetry, 8-fold geometric patterns, meditative spiritual art, ultra detailed",
+          "wisdom_theme": "Nothing rests; everything moves; everything vibrates",
+          "symbols": "Lotus (8-petals), Sri Yantra center, OM symbol",
+          "style": "Spiritual mandala art, smooth gradients, radial symmetry",
+          "resolution": "600 DPI",
+          "aspect_ratio": "Square (1:1)",
+          "color_mode": "Grayscale gradient (for depth/pitch mapping)"
+        },
+        "manufacturing": {
+          "material": "Stainless steel 304 polished",
+          "laser_mode": "MOPA diffraction grating",
+          "technique": "Gradient = varying line pitch (rainbow effect)",
+          "settings": {
+            "speed": "1400-1800 mm/s (pitch controlled)",
+            "power": "15-26%",
+            "frequency": "800-1200 kHz",
+            "line_spacing": "0.8-2.0 microns (gradient mapped)",
+            "angle": "Radial pattern (360° sweep)"
+          },
+          "size": "80mm diameter circle",
+          "effect": "Rainbow holographic colors when viewed at angles",
+          "lighting": "Best under direct light source"
+        },
+        "validation": "Tests: Gradient smoothness, diffraction color range, pitch accuracy, radial symmetry"
+      }
+    ],
+    "25d_relief": [
+      {
+        "name": "hermetic_philosopher_portrait",
+        "type": "2.5D_cnc_relief",
+        "difficulty": "advanced",
+        "prompt": {
+          "adobe_firefly": "Portrait of ancient Hermetic philosopher with long beard, wise eyes, wearing mystical robes covered in alchemical symbols, background with cosmic swirls and sacred geometry, dramatic side lighting casting shadows, Renaissance engraving style, high contrast grayscale for depth mapping, white=raised, black=deep cuts",
+          "wisdom_theme": "THE ALL is MIND; The Universe is Mental",
+          "mood": "Contemplative wisdom, mystical knowledge",
+          "lighting": "45° side lighting for depth definition",
+          "style": "Albrecht Dürer engraving style, grayscale depth map",
+          "resolution": "1024×1024 minimum",
+          "aspect_ratio": "Portrait (3:4)"
+        },
+        "manufacturing": {
+          "material": "Basswood, cherry, or MDF for testing",
+          "machine": "CNC router 4-axis (if rotary) or 3-axis (flat)",
+          "technique": "Grayscale heightmap → depth carving",
+          "tool": "Ball end mill 1/8\" or 1/16\" for detail",
+          "settings": {
+            "stepover": "10-20% of tool diameter",
+            "stepdown": "0.5mm max",
+            "feed_rate": "400 mm/min",
+            "max_depth": "5mm from surface to deepest cut",
+            "roughing_pass": "Optional 3mm depth, faster",
+            "finishing_pass": "Full detail, slower"
+          },
+          "size": "100mm × 133mm (or wrapped on 50mm dia cylinder)",
+          "post_process": "Sand 220-grit, seal, optional stain"
+        },
+        "validation": "Tests: Fine facial detail, depth gradient smoothness, tool path quality, surface finish"
+      },
+      {
+        "name": "flower_of_life_3d_relief",
+        "type": "2.5D_cnc_relief",
+        "difficulty": "medium",
+        "prompt": {
+          "adobe_firefly": "Flower of Life sacred geometry in 3D relief, overlapping circles appear to float at different depths, gradient shading from white peaks to gray valleys, subtle embossed effect, monochromatic, soft lighting, dimensional depth map, smooth gradients between circles",
+          "wisdom_theme": "As above, so below; as below, so above",
+          "symbols": "19 overlapping circles, perfect symmetry",
+          "style": "3D embossed relief, grayscale depth map, soft shadows",
+          "resolution": "800×800 minimum",
+          "aspect_ratio": "Square (1:1)"
+        },
+        "manufacturing": {
+          "material": "Aluminum 6061 or brass sheet",
+          "machine": "CNC router or MOPA laser (emboss mode)",
+          "technique": "Depth from grayscale values",
+          "settings_cnc": {
+            "tool": "Ball end 1/8\" or V-bit 30°",
+            "max_depth": "2mm",
+            "feed": "600 mm/min",
+            "stepover": "0.2mm"
+          },
+          "settings_mopa": {
+            "mode": "3D embossing layers",
+            "layers": "8-12 depth levels",
+            "power": "20-40% graduated",
+            "speed": "300-800 mm/s per layer"
+          },
+          "size": "80mm × 80mm",
+          "finish": "Polished or brushed metal"
+        },
+        "validation": "Tests: Depth accuracy, circle intersection quality, gradient smoothness, geometric precision"
+      }
+    ],
+    "3d_rotary": [
+      {
+        "name": "guardian_totem_unwrapped",
+        "type": "3D_rotary_4axis",
+        "difficulty": "advanced",
+        "prompt": {
+          "adobe_firefly": "Unwrapped cylindrical texture map for totem pole carving, three stacked guardian spirits: eagle at top, bear in middle, raven at bottom, Pacific Northwest indigenous art style, bold black formlines on white background, traditional Haida design, geometric patterns between figures, 360° seamless wrap pattern, rectangular format (360° width × height), grayscale for depth",
+          "wisdom_theme": "Spirit guardians, elemental protection",
+          "symbols": "Eagle (sky/vision), Bear (strength), Raven (transformation)",
+          "style": "Pacific Northwest indigenous, bold formlines, high contrast",
+          "resolution": "3600×1000 pixels (360° × 100mm unwrapped)",
+          "aspect_ratio": "Panoramic 18:5 (wraps seamlessly)",
+          "notes": "Must tile seamlessly left-to-right (360° wrap)"
+        },
+        "manufacturing": {
+          "material": "Wood cylinder (pine, cedar, or basswood) 40mm dia × 100mm",
+          "machine": "CNC router with 4-axis rotary",
+          "process": "image_to_relief.py converts to G-code",
+          "command": "python image_to_relief.py \"guardian_totem_unwrapped.jpg\"",
+          "settings": {
+            "base_radius": "20mm",
+            "max_relief_depth": "5mm",
+            "angular_resolution": "1° (360 samples)",
+            "height_resolution": "1mm (100 samples)",
+            "feed_rate": "400 mm/min",
+            "spindle": "12000 RPM",
+            "tool": "Ball end 1/8\" or tapered ball"
+          },
+          "technique": "Black = deep carving, White = surface level",
+          "output": "36,000 point toolpath, helical passes",
+          "finish": "Sand, stain (dark walnut), seal"
+        },
+        "validation": "Tests: Cylindrical wrap accuracy, 360° seamless join, face detail, depth variation, rotary axis precision"
+      },
+      {
+        "name": "alchemy_symbols_wrap",
+        "type": "3D_rotary_4axis",
+        "difficulty": "medium",
+        "prompt": {
+          "adobe_firefly": "Unwrapped texture for cylinder: alchemical symbols arranged in horizontal bands, mercury/sulfur/salt symbols, planetary glyphs, element symbols (🜂🜃🜁🜄), transmutation stages, medieval manuscript style, gold and black color scheme (gold=surface, black=carved), decorative borders between bands, seamless 360° wrap, grayscale depth map",
+          "wisdom_theme": "Everything is Dual; everything has poles + Alchemy",
+          "symbols": "7 metals/planets, 4 elements, quintessence, philosopher's stone",
+          "style": "Medieval alchemical manuscript, ornate, mystical",
+          "resolution": "3600×1200 pixels",
+          "aspect_ratio": "Panoramic 3:1",
+          "color": "Grayscale or gold/black for depth mapping"
+        },
+        "manufacturing": {
+          "material": "Brass or aluminum cylinder 50mm dia × 120mm",
+          "machine": "CNC 4-axis or MOPA laser rotary",
+          "technique_cnc": "Image to relief, helical toolpath",
+          "technique_mopa": "Rotary deep engraving",
+          "settings_cnc": {
+            "depth": "3mm relief",
+            "tool": "1/16\" ball end",
+            "feed": "500 mm/min"
+          },
+          "settings_mopa": {
+            "power": "35-50%",
+            "speed": "100-300 mm/s",
+            "frequency": "80 kHz",
+            "rotary_mode": "Continuous rotation synchronized"
+          },
+          "size": "50mm diameter × 120mm height",
+          "finish": "Polish brass, apply patina to recessed areas"
+        },
+        "validation": "Tests: Symbol legibility, band alignment, seamless wrap, depth consistency, rotary synchronization"
+      }
+    ]
+  }
+}
