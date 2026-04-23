@@ -10,9 +10,11 @@ import sys
 import subprocess
 import os
 import logging
+import tempfile
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 import traceback
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
@@ -29,10 +31,9 @@ class BlenderMCPServer:
     """Complete MCP Server for Blender Integration with all original features"""
 
     def __init__(self):
-        self.blender_executable = os.getenv('BLENDER_EXECUTABLE',
-            'C:\\Program Files\\Blender Foundation\\Blender 4.5\\blender.exe')
+        self.blender_executable = self._resolve_blender_executable()
         self.real_mode = os.getenv('BLENDER_REAL_MODE', 'true').lower() == 'true'
-        self.save_directory = "F:\\Documents\\Blender"
+        self.save_directory = self._resolve_save_directory()
 
         logger.info(f"Blender MCP Server initializing...")
         logger.info(f"Blender executable: {self.blender_executable}")
@@ -42,6 +43,36 @@ class BlenderMCPServer:
         # Initialize all tools
         self.tools = self._initialize_tools()
         logger.info(f"Initialized {len(self.tools)} MCP tools")
+
+    def _resolve_blender_executable(self) -> str:
+        """Resolve Blender executable path from env or common Windows install paths."""
+        env_path = os.getenv('BLENDER_EXECUTABLE')
+        if env_path:
+            return env_path
+
+        candidates = [
+            r"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe",
+            r"C:\Program Files\Blender Foundation\Blender 5.0\blender.exe",
+            r"C:\Program Files\Blender Foundation\Blender 4.6\blender.exe",
+            r"C:\Program Files\Blender Foundation\Blender 4.5\blender.exe",
+            r"C:\Program Files\Blender Foundation\Blender 4.4\blender.exe",
+            r"C:\Program Files\Blender Foundation\Blender 4.2\blender.exe",
+        ]
+
+        for candidate in candidates:
+            if os.path.exists(candidate):
+                return candidate
+
+        # Fallback for first-run workflows; callers can still override via BLENDER_EXECUTABLE.
+        return candidates[3]
+
+    def _resolve_save_directory(self) -> str:
+        """Resolve output directory from env with a workspace-local default."""
+        env_path = os.getenv('BLENDER_SAVE_DIRECTORY')
+        if env_path:
+            return env_path
+
+        return str(Path.cwd() / "output")
 
     def _initialize_tools(self) -> List[MCPTool]:
         """Initialize all MCP tools with complete functionality"""
@@ -281,18 +312,18 @@ class BlenderMCPServer:
             logger.info("MOCK MODE: Would execute Blender script")
             return {"success": True, "output": "MOCK: Script executed successfully", "mock": True}
 
+        script_path = None
         try:
             # Create temporary script file
-            script_path = "/tmp/blender_mcp_script.py"
-            with open(script_path, 'w') as f:
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False, encoding='utf-8') as f:
+                script_path = f.name
                 f.write(script_content)
 
             logger.info(f"Executing Blender script: {script_path}")
 
             # Execute in Blender
-            cmd = f'powershell.exe -Command "& \\"{self.blender_executable}\\" --background --python {script_path}"'
-
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
+            cmd = [self.blender_executable, "--background", "--python", script_path]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
             if result.returncode == 0:
                 logger.info("Blender script executed successfully")
@@ -307,6 +338,12 @@ class BlenderMCPServer:
         except Exception as e:
             logger.error(f"Error executing Blender script: {e}")
             return {"success": False, "error": str(e)}
+        finally:
+            if script_path and os.path.exists(script_path):
+                try:
+                    os.unlink(script_path)
+                except OSError:
+                    logger.warning(f"Unable to remove temporary script: {script_path}")
 
     def handle_tool_call(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         """Handle MCP tool calls with complete functionality"""

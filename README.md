@@ -27,15 +27,17 @@ A Model Context Protocol (MCP) server that enables **GitHub Copilot Pro** to con
 python3 -m venv blender-mcp-env
 source blender-mcp-env/bin/activate
 pip install mcp typing-extensions
+```
 
-3. Configure VS Code MCP integration:
-   - The `.vscode/mcp.json` file configures the server connection
-   - GitHub Copilot Pro will automatically detect and use the MCP server
+### 2. Configure VS Code MCP integration
+- Use the configuration patterns documented in `MCP_CONFIG.md`
+- Set `BLENDER_EXECUTABLE` to your local Blender path
+- Optionally set `BLENDER_SAVE_DIRECTORY` for generated `.blend` and G-code output
 
-4. Test the server:
-   ```powershell
-   python blender_mcp_server.py
-   ```
+### 3. Test the server
+```powershell
+python blender_mcp_server.py
+```
 
 ### Usage with GitHub Copilot Pro
 
@@ -51,52 +53,35 @@ Once configured, you can use natural language commands with GitHub Copilot Pro:
 ## MCP Tools Available
 
 ### Mesh Operations
-- `create_mesh_cube` - Create cube primitives
-- `create_mesh_sphere` - Create sphere primitives  
-- `create_mesh_cylinder` - Create cylinder primitives
-- `delete_object` - Remove objects from scene
-- `move_object` - Position objects in 3D space
-- `scale_object` - Resize objects uniformly or per-axis
-- `rotate_object` - Rotate objects around axes
+- `create_cube` - Create cube primitives
+- `create_sphere` - Create sphere primitives
+- `create_cylinder` - Create cylinder primitives
 
-### Material Operations
-- `create_material` - Create PBR materials with colors
-- `assign_material` - Apply materials to objects
-- `set_material_property` - Adjust metallic, roughness, emission
-- `create_emission_material` - Create glowing materials
-- `get_materials_list` - List all scene materials
-- `duplicate_material` - Copy existing materials
+### Material and Scene Operations
+- `create_material` - Create a material
+- `assign_material` - Assign material to an object
+- `clear_scene` - Remove mesh objects from scene
+- `save_blend_file` - Save current scene to `.blend`
+- `render_image` - Render a still image
 
-### Scene Operations  
-- `get_scene_objects` - List all objects with details
-- `clear_scene` - Remove objects (with camera/light options)
-- `set_camera_location` - Position cameras
-- `point_camera_at` - Aim camera at targets
-- `add_light` - Create various light types
-- `save_blend_file` - Save Blender projects
-- `load_blend_file` - Load existing projects
-- `get_scene_info` - Scene statistics and settings
+### CNC Toolpath Operations
+- `generate_cnc_toolpath` - Generate multi-axis toolpath
+- `generate_rotary_toolpath` - Generate continuous rotary path
+- `optimize_toolpath` - Optimize an existing toolpath
+- `export_gcode` - Export generic machine G-code
+- `simulate_toolpath` - Simulate path execution
+- `generate_depth_map` - Generate grayscale depth map for relief carving
 
-### Animation Operations
-- `set_keyframe` - Create keyframes for properties
-- `animate_object_movement` - Linear movement animation
-- `animate_rotation` - Rotation animations
-- `animate_scale` - Scaling animations  
-- `set_frame_range` - Configure timeline
-- `play_animation` - Start/stop playback
-- `goto_frame` - Navigate timeline
-- `clear_animation` - Remove animation data
-- `get_animation_info` - Animation statistics
+### File Import/Export Operations
+- `import_stl` - Import STL into Blender scene
+- `export_model` - Export model as STL/OBJ/FBX/PLY
 
-### Render Operations
-- `render_image` - Render single frames
-- `render_animation` - Render animation sequences
-- `set_render_resolution` - Configure output resolution
-- `set_render_engine_settings` - Cycles/EEVEE configuration
-- `set_render_format` - Output format (PNG, JPEG, etc.)
-- `get_render_info` - Current render settings
-- `preview_render` - Viewport render preview
-- `stop_render` - Cancel rendering
+### BlenderCAM Operations
+- `setup_blendercam` - Enable/configure BlenderCAM addon
+- `create_cam_operation` - Create CAM operation profile
+- `calculate_cam_paths` - Calculate CAM toolpaths
+- `export_cam_gcode` - Export BlenderCAM G-code
+- `simulate_cam_operation` - Simulate CAM material removal
 
 ## Architecture
 
@@ -135,8 +120,7 @@ Blender-MCP/
 │   ├── scene_operations.py       # Scene management
 │   ├── animation_operations.py   # Animation tools
 │   └── render_operations.py      # Rendering
-├── .vscode/
-│   └── mcp.json                  # VS Code MCP config
+├── MCP_CONFIG.md                 # VS Code MCP config examples
 ├── .github/
 │   └── copilot-instructions.md   # Copilot guidance
 ├── requirements.txt              # Dependencies
@@ -191,7 +175,7 @@ For deeper integration, a Blender addon will be provided that:
    - Install Blender for full functionality
 
 3. **MCP Connection Issues**
-   - Check `.vscode/mcp.json` configuration
+   - Check your MCP server settings using `MCP_CONFIG.md`
    - Verify GitHub Copilot Pro is active
    - Restart VS Code if needed
 
