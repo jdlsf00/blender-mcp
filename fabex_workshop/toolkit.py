@@ -12,7 +12,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import shutil
+import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -141,6 +143,24 @@ class RingBandJob:
     finish_allowance_mm: float = 0.1
     ramp_length_mm: float = 3.0
     material_name: str = "brass"
+
+
+@dataclass
+class MoldJob:
+    mold_type: str
+    name: str
+    thickness_mm: float
+    material_name: str = "wax"
+    diameter_mm: float | None = None
+    width_mm: float | None = None
+    height_mm: float | None = None
+    corner_radius_mm: float = 3.0
+    hole_diameter_mm: float = 0.0
+    stock_margin_mm: float = 6.0
+    floor_thickness_mm: float = 2.0
+    cavity_clearance_mm: float = 0.15
+    use_geometry_nodes: bool = False
+    gn_subdiv_level: int = 1
 
 
 DEFAULT_MACHINE = MachineProfile(
@@ -1009,8 +1029,8 @@ def toggle_bracelet_blank_svg(length_mm: float, width_mm: float, ring_outer_mm: 
 '''
 
 
-def geometry_nodes_helper_script(default_subdiv_level: int = 1) -> str:
-    return f'''USE_GEOMETRY_NODES = True
+def geometry_nodes_helper_script(default_subdiv_level: int = 1, enabled: bool = True) -> str:
+    return f'''USE_GEOMETRY_NODES = {str(enabled)}
 GN_SUBDIV_LEVEL = {default_subdiv_level}
 
 def apply_geometry_nodes_enhancement(target_obj, group_name, subdiv_level=GN_SUBDIV_LEVEL):
@@ -1915,6 +1935,631 @@ def ring_band_profile_gcode(job: RingBandJob) -> list[str]:
     return lines
 
 
+def sanitize_job_name(name: str) -> str:
+    cleaned = re.sub(r"[^a-zA-Z0-9_-]+", "_", name.strip().lower())
+    cleaned = cleaned.strip("_")
+    return cleaned or "mold_job"
+
+
+def mold_geometry(job: MoldJob) -> dict[str, float]:
+    if job.thickness_mm <= 0.0:
+        raise ValueError("thickness_mm must be greater than zero")
+    if job.floor_thickness_mm <= 0.0:
+        raise ValueError("floor_thickness_mm must be greater than zero")
+    if job.stock_margin_mm <= 0.0:
+        raise ValueError("stock_margin_mm must be greater than zero")
+    if job.cavity_clearance_mm < 0.0:
+        raise ValueError("cavity_clearance_mm must be zero or greater")
+
+    cavity_depth = job.thickness_mm + job.cavity_clearance_mm
+    stock_thickness = cavity_depth + job.floor_thickness_mm
+
+    if job.mold_type == "coin":
+        diameter = job.diameter_mm if job.diameter_mm is not None else 32.0
+        if diameter <= 0.0:
+            raise ValueError("diameter_mm must be greater than zero for coin molds")
+        cavity_diameter = diameter + (job.cavity_clearance_mm * 2.0)
+        return {
+            "model_diameter_mm": diameter,
+            "cavity_diameter_mm": cavity_diameter,
+            "cavity_depth_mm": cavity_depth,
+            "stock_width_mm": cavity_diameter + (job.stock_margin_mm * 2.0),
+            "stock_height_mm": cavity_diameter + (job.stock_margin_mm * 2.0),
+            "stock_thickness_mm": stock_thickness,
+        }
+
+    default_width = 28.0 if job.mold_type == "dogtag" else 40.0
+    default_height = 50.0 if job.mold_type == "dogtag" else 20.0
+    width = job.width_mm if job.width_mm is not None else default_width
+    height = job.height_mm if job.height_mm is not None else default_height
+    if width <= 0.0 or height <= 0.0:
+        raise ValueError("width_mm and height_mm must be greater than zero")
+
+    cavity_width = width + (job.cavity_clearance_mm * 2.0)
+    cavity_height = height + (job.cavity_clearance_mm * 2.0)
+    return {
+        "model_width_mm": width,
+        "model_height_mm": height,
+        "cavity_width_mm": cavity_width,
+        "cavity_height_mm": cavity_height,
+        "cavity_depth_mm": cavity_depth,
+        "stock_width_mm": cavity_width + (job.stock_margin_mm * 2.0),
+        "stock_height_mm": cavity_height + (job.stock_margin_mm * 2.0),
+        "stock_thickness_mm": stock_thickness,
+    }
+
+
+def mold_blender_script(job: MoldJob, geometry: dict[str, float]) -> str:
+    job_slug = sanitize_job_name(job.name)
+    if job.mold_type == "coin":
+        master_geometry_block = f'''bpy.ops.mesh.primitive_cylinder_add(vertices=192, radius=cavity_diameter / 2.0, depth=cavity_depth)
+master = bpy.context.active_object
+master.name = "CoinMaster"
+'''
+        shape_parameters = f'''cavity_diameter = {geometry["cavity_diameter_mm"] * MM_TO_M:.6f}
+cavity_depth = {geometry["cavity_depth_mm"] * MM_TO_M:.6f}
+'''
+        stock_geometry_block = f'''bpy.ops.mesh.primitive_cylinder_add(vertices=192, radius=stock_width / 2.0, depth=stock_thickness)
+stock = bpy.context.active_object
+stock.name = "{job_slug}_MoldStock"
+'''
+    else:
+        hole_radius_m = max(job.hole_diameter_mm / 2.0 * MM_TO_M, 0.0)
+        hole_block = ""
+        if job.mold_type == "dogtag" and hole_radius_m > 0.0:
+            hole_block = f'''if hole_radius > 0.0:
+    bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=hole_radius, depth=cavity_depth * 1.4)
+    tag_hole = bpy.context.active_object
+    tag_hole.name = "DogtagHole"
+    tag_hole.location.y = -(cavity_height / 2.0 - hole_radius * 2.2)
+
+    hole_cut = master.modifiers.new(name="TopHole", type='BOOLEAN')
+    hole_cut.operation = 'DIFFERENCE'
+    hole_cut.object = tag_hole
+    bpy.context.view_layer.objects.active = master
+    bpy.ops.object.modifier_apply(modifier=hole_cut.name)
+    bpy.data.objects.remove(tag_hole, do_unlink=True)
+'''
+        master_geometry_block = f'''bpy.ops.mesh.primitive_cube_add(size=1.0)
+master_outer = bpy.context.active_object
+master_outer.name = "{job.mold_type.title()}Outer"
+master_outer.scale = (cavity_width / 2.0, cavity_height / 2.0, cavity_depth / 2.0)
+
+if corner_radius > 0.0:
+    bevel = master_outer.modifiers.new(name="MasterCornerRadius", type='BEVEL')
+    bevel.width = min(corner_radius, min(cavity_width, cavity_height) / 2.0)
+    bevel.segments = 8
+    bevel.limit_method = 'NONE'
+    bpy.context.view_layer.objects.active = master_outer
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+
+master = master_outer.copy()
+master.data = master_outer.data.copy()
+bpy.context.collection.objects.link(master)
+master.name = "{job.mold_type.title()}Master"
+
+{hole_block}'''
+        shape_parameters = f'''cavity_width = {geometry["cavity_width_mm"] * MM_TO_M:.6f}
+cavity_height = {geometry["cavity_height_mm"] * MM_TO_M:.6f}
+cavity_depth = {geometry["cavity_depth_mm"] * MM_TO_M:.6f}
+corner_radius = {job.corner_radius_mm * MM_TO_M:.6f}
+hole_radius = {hole_radius_m:.6f}
+'''
+        stock_geometry_block = f'''stock = master_outer.copy()
+stock.data = master_outer.data.copy()
+bpy.context.collection.objects.link(stock)
+stock.name = "{job_slug}_MoldStock"
+
+stock_scale_x = stock_width / max(cavity_width, 1e-6)
+stock_scale_y = stock_height / max(cavity_height, 1e-6)
+stock_scale_z = stock_thickness / max(cavity_depth, 1e-6)
+stock.scale.x *= stock_scale_x
+stock.scale.y *= stock_scale_y
+stock.scale.z *= stock_scale_z
+bpy.context.view_layer.objects.active = stock
+bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+bpy.data.objects.remove(master_outer, do_unlink=True)
+'''
+
+    script = f'''"""Create a parametric {job.mold_type} negative mold base in Blender."""
+
+import bpy
+
+{geometry_nodes_helper_script(default_subdiv_level=job.gn_subdiv_level, enabled=job.use_geometry_nodes)}
+
+{shape_parameters}
+stock_width = {geometry["stock_width_mm"] * MM_TO_M:.6f}
+stock_height = {geometry["stock_height_mm"] * MM_TO_M:.6f}
+stock_thickness = {geometry["stock_thickness_mm"] * MM_TO_M:.6f}
+floor_thickness = {job.floor_thickness_mm * MM_TO_M:.6f}
+
+{master_geometry_block}
+apply_geometry_nodes_enhancement(master, "{job_slug}_GN", subdiv_level=GN_SUBDIV_LEVEL)
+
+# Keep a visible reference of the master shape for inspection.
+master_ref = master.copy()
+master_ref.data = master.data.copy()
+master_ref.name = "{job_slug}_MasterRef"
+bpy.context.collection.objects.link(master_ref)
+master_ref.display_type = 'WIRE'
+
+# Keep cavity opening at Z+ so machining can approach from top-down.
+master.location.z = floor_thickness / 2.0
+
+{stock_geometry_block}
+
+cut = stock.modifiers.new(name="CavityCut", type='BOOLEAN')
+cut.operation = 'DIFFERENCE'
+cut.object = master
+bpy.context.view_layer.objects.active = stock
+bpy.ops.object.modifier_apply(modifier=cut.name)
+bpy.data.objects.remove(master, do_unlink=True)
+
+stock.name = "{job_slug}_MoldBase"
+print("Created mold base:", stock.name)
+'''
+    return script
+
+
+def mold_operation_stack(job: MoldJob, geometry: dict[str, float]) -> dict[str, Any]:
+    material = material_preset(job.material_name)
+    cavity_depth = geometry["cavity_depth_mm"]
+    return {
+        "job_name": job.name,
+        "mold_type": job.mold_type,
+        "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+        "material": job.material_name,
+        "geometry": geometry,
+        "geometry_nodes": {
+            "enabled_default": job.use_geometry_nodes,
+            "subdiv_level": job.gn_subdiv_level,
+        },
+        "fabex_operation_stack": [
+            {
+                "operation_name": f"{sanitize_job_name(job.name)}_01_rough_cavity",
+                "strategy": "POCKET",
+                "recommended_tool_ids": ["spetool_downcut_1_8in", "spetool_ballnose_r1_16"],
+                "stepdown_mm": min(material.stepdown_mm, max(cavity_depth / 3.0, 0.35)),
+                "stepover_percent": min(material.stepover_percent + 10.0, 45.0),
+                "spindle_rpm": material.spindle_rpm,
+                "feed_rate_mm_min": material.feed_rate_mm_min,
+                "plunge_rate_mm_min": material.plunge_rate_mm_min,
+                "safe_z_mm": 5.0,
+                "entry_style": "ramp",
+            },
+            {
+                "operation_name": f"{sanitize_job_name(job.name)}_02_detail_cavity",
+                "strategy": "PARALLEL",
+                "recommended_tool_ids": ["spetool_ballnose_r1_16", "spetool_ballnose_r0_5"],
+                "stepdown_mm": min(0.35, max(material.stepdown_mm * 0.5, 0.15)),
+                "stepover_percent": 15.0,
+                "spindle_rpm": material.spindle_rpm,
+                "feed_rate_mm_min": material.finish_feed_mm_min,
+                "plunge_rate_mm_min": material.plunge_rate_mm_min,
+                "safe_z_mm": 5.0,
+                "entry_style": "ramp",
+            },
+            {
+                "operation_name": f"{sanitize_job_name(job.name)}_03_finish_wall",
+                "strategy": "CUTOUT",
+                "recommended_tool_ids": ["spetool_downcut_1_8in", "spetool_vbit_60deg"],
+                "stepdown_mm": min(0.4, max(material.stepdown_mm * 0.6, 0.2)),
+                "stepover_percent": 12.0,
+                "spindle_rpm": material.spindle_rpm,
+                "feed_rate_mm_min": material.finish_feed_mm_min,
+                "plunge_rate_mm_min": material.plunge_rate_mm_min,
+                "safe_z_mm": 5.0,
+                "entry_style": "ramp",
+            },
+        ],
+    }
+
+
+def mold_machine_gcode_profile(job: MoldJob, geometry: dict[str, float]) -> dict[str, Any]:
+    material = material_preset(job.material_name)
+    return {
+        "job_name": job.name,
+        "mold_type": job.mold_type,
+        "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+        "post_processor": DEFAULT_MACHINE.post_processor,
+        "router": MAKITA_ROUTER_PROFILE,
+        "material": asdict(material),
+        "geometry": geometry,
+        "recommended_tool_ids": ["spetool_downcut_1_8in", "spetool_ballnose_r1_16", "spetool_vbit_60deg"],
+        "safe_z_mm": 5.0,
+        "controller_notes": [
+            "Run one air-cut and one shallow pass before full-depth execution.",
+            "If geometry nodes are enabled, apply the modifier in Blender before CAM for deterministic meshes.",
+        ],
+    }
+
+
+def mold_roughing_gcode(job: MoldJob, geometry: dict[str, float]) -> list[str]:
+    material = material_preset(job.material_name)
+    tool_diameter_mm = 3.175
+    stepover_mm = max(tool_diameter_mm * (material.stepover_percent / 100.0), 0.25)
+
+    if job.mold_type == "coin":
+        circular_job = CircularPocketJob(
+            diameter_mm=geometry["cavity_diameter_mm"],
+            depth_mm=geometry["cavity_depth_mm"],
+            tool_diameter_mm=tool_diameter_mm,
+            stepover_mm=stepover_mm,
+            stepdown_mm=min(material.stepdown_mm, max(geometry["cavity_depth_mm"] / 3.0, 0.3)),
+            feed_rate_mm_min=material.feed_rate_mm_min,
+            plunge_rate_mm_min=material.plunge_rate_mm_min,
+            spindle_rpm=material.spindle_rpm,
+            material_name=job.material_name,
+        )
+        return circular_pocket_gcode(circular_job)
+
+    pocket_job = PocketJob(
+        width_mm=geometry["cavity_width_mm"],
+        height_mm=geometry["cavity_height_mm"],
+        depth_mm=geometry["cavity_depth_mm"],
+        tool_diameter_mm=tool_diameter_mm,
+        stepover_mm=stepover_mm,
+        stepdown_mm=min(material.stepdown_mm, max(geometry["cavity_depth_mm"] / 3.0, 0.3)),
+        feed_rate_mm_min=material.feed_rate_mm_min,
+        plunge_rate_mm_min=material.plunge_rate_mm_min,
+        spindle_rpm=material.spindle_rpm,
+        material_name=job.material_name,
+    )
+    return rectangle_pocket_gcode(pocket_job)
+
+
+def build_mold_job(output_dir: Path, job: MoldJob) -> list[Path]:
+    if job.material_name not in DEFAULT_MATERIALS:
+        raise ValueError(f"Unknown material preset: {job.material_name}")
+    if job.mold_type not in {"coin", "dogtag", "domino"}:
+        raise ValueError("mold_type must be one of: coin, dogtag, domino")
+
+    geometry = mold_geometry(job)
+    root = ensure_dir(output_dir / "mold_jobs" / sanitize_job_name(job.name))
+    written: list[Path] = []
+
+    script_path = root / f"{sanitize_job_name(job.name)}_mold.py"
+    write_text(script_path, mold_blender_script(job, geometry))
+    written.append(script_path)
+
+    stack_path = root / f"{sanitize_job_name(job.name)}_fabex_stack.json"
+    write_text(stack_path, json.dumps(mold_operation_stack(job, geometry), indent=2))
+    written.append(stack_path)
+
+    profile_path = root / f"{sanitize_job_name(job.name)}_machine_profile.json"
+    write_text(profile_path, json.dumps(mold_machine_gcode_profile(job, geometry), indent=2))
+    written.append(profile_path)
+
+    gcode_path = root / f"{sanitize_job_name(job.name)}_roughing.nc"
+    write_text(gcode_path, "\n".join(mold_roughing_gcode(job, geometry)) + "\n")
+    written.append(gcode_path)
+
+    manifest_path = root / f"{sanitize_job_name(job.name)}_manifest.json"
+    manifest = {
+        "job": asdict(job),
+        "geometry": geometry,
+        "files": {
+            "blender_script": script_path.name,
+            "fabex_stack": stack_path.name,
+            "machine_profile": profile_path.name,
+            "roughing_gcode": gcode_path.name,
+        },
+    }
+    write_text(manifest_path, json.dumps(manifest, indent=2))
+    written.append(manifest_path)
+    return written
+
+
+def load_mold_job_manifest(output_dir: Path, job_name: str) -> tuple[Path, dict[str, Any], str]:
+    job_slug = sanitize_job_name(job_name)
+    job_root = output_dir / "mold_jobs" / job_slug
+    manifest_path = job_root / f"{job_slug}_manifest.json"
+    if not manifest_path.exists():
+        raise FileNotFoundError(
+            f"Mold manifest not found for '{job_name}'. Expected: {manifest_path}. "
+            "Run mold-job first to generate the base package."
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    return job_root, manifest, job_slug
+
+
+def mold_cam_batch_script(job_root: Path, manifest: dict[str, Any], job_slug: str, strict_mode: bool = False) -> str:
+    return f'''"""Automated Fabex CAM batch for mold job: {job_slug}."""
+
+import json
+from pathlib import Path
+
+import addon_utils
+import bpy
+
+
+MM_TO_M = 0.001
+STRICT_MODE = {str(strict_mode)}
+JOB_ROOT = Path(r"{job_root}")
+MANIFEST_PATH = JOB_ROOT / "{job_slug}_manifest.json"
+
+
+def set_if_attr(target, attr_name, value):
+    if hasattr(target, attr_name):
+        setattr(target, attr_name, value)
+
+
+def clear_scene():
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.object.delete(use_global=False)
+
+
+def enable_fabex():
+    module_name = "bl_ext.user_default.fabex"
+    if not addon_utils.check(module_name)[1]:
+        addon_utils.enable(module_name, default_set=True)
+    if not addon_utils.check(module_name)[1]:
+        raise RuntimeError("Fabex extension did not enable")
+
+
+def execute_script(path: Path):
+    namespace = {{"__file__": str(path), "__name__": "__main__"}}
+    code = compile(path.read_text(encoding="utf-8"), str(path), "exec")
+    exec(code, namespace, namespace)
+
+
+def tool_id_to_cutter(tool_id: str) -> str:
+    value = (tool_id or "").lower()
+    if "ballnose" in value:
+        return "BALLNOSE"
+    if "vbit" in value:
+        return "VCARVE"
+    return "END"
+
+
+def export_operation_gcode(operation, output_path: Path):
+    path_obj = bpy.data.objects.get("cam_path_" + operation.name)
+    if path_obj is None:
+        raise RuntimeError("CAM path object missing for operation: " + operation.name)
+
+    from cam import gcodepath
+
+    gcodepath.exportGcodePath(str(output_path), [path_obj.data], [operation])
+
+
+def find_mold_object(expected_name: str):
+    mold_obj = bpy.data.objects.get(expected_name)
+    if mold_obj is not None:
+        return mold_obj
+
+    mesh_objects = [obj for obj in bpy.data.objects if obj.type == "MESH"]
+    if not mesh_objects:
+        raise RuntimeError("No mesh objects found after mold script execution")
+    return mesh_objects[0]
+
+
+def main():
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    files = manifest["files"]
+    stack_doc = json.loads((JOB_ROOT / files["fabex_stack"]).read_text(encoding="utf-8"))
+    profile = json.loads((JOB_ROOT / files["machine_profile"]).read_text(encoding="utf-8"))
+    roughing_source = JOB_ROOT / files.get("roughing_gcode", "")
+
+    output_dir = JOB_ROOT / "cam_output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    clear_scene()
+    enable_fabex()
+    execute_script(JOB_ROOT / files["blender_script"])
+
+    mold_name = "{job_slug}_MoldBase"
+    mold_obj = find_mold_object(mold_name)
+
+    scene = bpy.context.scene
+    machine_post_map = {{
+        "GRBL": "GRBL",
+        "ISO": "ISO",
+        "LINUXCNC": "EMC",
+        "EMC2": "EMC",
+        "MACH3": "MACH3",
+        "FADAL": "FADAL",
+        "HEIDENHAIN": "HEIDENHAIN",
+        "SHOPBOT": "SHOPBOT MTC",
+    }}
+    machine_post = machine_post_map.get(str(profile.get("post_processor", "GRBL")).upper(), "GRBL")
+    if hasattr(scene, "cam_machine") and hasattr(scene.cam_machine, "post_processor"):
+        scene.cam_machine.post_processor = machine_post
+
+    results = []
+    for op_cfg in stack_doc.get("fabex_operation_stack", []):
+        operation_name = str(op_cfg.get("operation_name", "mold_operation"))
+        try:
+            bpy.ops.scene.cam_operation_add()
+            scene.cam_active_operation = len(scene.cam_operations) - 1
+            operation = scene.cam_operations[scene.cam_active_operation]
+            operation.name = operation_name
+
+            set_if_attr(operation, "object_name", mold_obj.name)
+            set_if_attr(operation, "geometry_source", "OBJECT")
+            set_if_attr(operation, "ambient_behaviour", "ALL")
+            set_if_attr(operation, "movement_type", "MEANDER")
+            set_if_attr(operation, "strategy", str(op_cfg.get("strategy", "POCKET")))
+
+            recommended = op_cfg.get("recommended_tool_ids", [])
+            primary_tool = recommended[0] if recommended else ""
+            set_if_attr(operation, "cutter_type", tool_id_to_cutter(primary_tool))
+
+            feed_mm = float(op_cfg.get("feed_rate_mm_min", profile.get("feed_rate_mm_min", 700.0)))
+            plunge_mm = float(op_cfg.get("plunge_rate_mm_min", profile.get("plunge_rate_mm_min", 180.0)))
+            spindle = float(op_cfg.get("spindle_rpm", profile.get("spindle_rpm", 12000)))
+            stepdown_mm = float(op_cfg.get("stepdown_mm", profile.get("stepdown_mm", 0.8)))
+            stepover_percent = float(op_cfg.get("stepover_percent", profile.get("stepover_percent", 18.0)))
+
+            set_if_attr(operation, "feedrate", feed_mm * MM_TO_M)
+            set_if_attr(operation, "plunge_feedrate", plunge_mm * MM_TO_M)
+            set_if_attr(operation, "stepdown", stepdown_mm * MM_TO_M)
+
+            if hasattr(operation, "spindle"):
+                operation.spindle = spindle
+            if hasattr(operation, "spindle_rpm"):
+                operation.spindle_rpm = spindle
+
+            if hasattr(operation, "distance_between_paths"):
+                operation.distance_between_paths = max(stepover_percent, 1.0) / 100.0 * MM_TO_M
+
+            gcode_path = output_dir / f"{{operation_name}}.gcode"
+            set_if_attr(operation, "filename", str(gcode_path))
+
+            try:
+                scene.cam_active_operation = operation
+            except Exception:
+                scene.cam_active_operation = len(scene.cam_operations) - 1
+
+            bpy.ops.object.calculate_cam_path()
+            export_operation_gcode(operation, gcode_path)
+
+            results.append({{"operation_name": operation_name, "status": "ok", "gcode_file": gcode_path.name}})
+            print("CAM operation completed:", operation_name)
+        except Exception as exc:
+            if STRICT_MODE:
+                results.append({{"operation_name": operation_name, "status": "error", "error": str(exc)}})
+                print("CAM operation failed:", operation_name, exc)
+            elif roughing_source.exists():
+                fallback_path = output_dir / f"{{operation_name}}_fallback.gcode"
+                fallback_path.write_text(roughing_source.read_text(encoding="utf-8"), encoding="utf-8")
+                results.append(
+                    {{
+                        "operation_name": operation_name,
+                        "status": "fallback",
+                        "error": str(exc),
+                        "gcode_file": fallback_path.name,
+                    }}
+                )
+                print("CAM operation fallback used:", operation_name, exc)
+            else:
+                results.append({{"operation_name": operation_name, "status": "error", "error": str(exc)}})
+                print("CAM operation failed:", operation_name, exc)
+
+    report = {{
+        "job_name": manifest.get("job", {{}}).get("name", "{job_slug}"),
+        "mold_type": manifest.get("job", {{}}).get("mold_type", "unknown"),
+        "strict_mode": STRICT_MODE,
+        "post_processor": machine_post,
+        "operation_results": results,
+    }}
+    report_path = output_dir / "{job_slug}_cam_report.json"
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+
+    blend_path = output_dir / "{job_slug}_cam_scene.blend"
+    bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
+
+    failed = [item for item in results if item.get("status") not in ("ok", "fallback")]
+    fallback_count = len([item for item in results if item.get("status") == "fallback"])
+    if failed:
+        print("CAM_BATCH_PARTIAL", len(failed), "operation(s) failed")
+        raise SystemExit(2)
+    print("CAM_BATCH_OK", len(results), "operation(s)", "fallbacks", fallback_count)
+
+
+if __name__ == "__main__":
+    main()
+'''
+
+
+def mold_cam_runner_script(job_slug: str, cam_script_path: Path) -> str:
+    script_path = str(cam_script_path)
+    return f'''param(
+    [string]$BlenderExecutable = ""
+)
+
+$candidates = @(
+    "C:\\Program Files\\Blender Foundation\\Blender 4.5\\blender.exe",
+    "C:\\Program Files\\Blender Foundation\\Blender 4.4\\blender.exe",
+    "C:\\Program Files\\Blender Foundation\\Blender 4.3\\blender.exe"
+)
+
+if (-not $BlenderExecutable) {{
+    foreach ($candidate in $candidates) {{
+        if (Test-Path $candidate) {{
+            $BlenderExecutable = $candidate
+            break
+        }}
+    }}
+}}
+
+if (-not $BlenderExecutable) {{
+    $BlenderExecutable = "blender"
+}}
+
+$logPath = Join-Path (Split-Path -Parent "{script_path}") "cam_output\\{job_slug}_cam_batch.log"
+New-Item -ItemType Directory -Force -Path (Split-Path -Parent $logPath) | Out-Null
+
+& $BlenderExecutable --background --python "{script_path}" 2>&1 | Tee-Object -FilePath $logPath
+if ($LASTEXITCODE -ne 0) {{
+    Write-Error "CAM automation failed. Check log: $logPath"
+    exit $LASTEXITCODE
+}}
+
+Write-Output "CAM automation completed. Log: $logPath"
+'''
+
+
+def resolve_blender_executable(preferred: str | None) -> str:
+    if preferred:
+        return preferred
+
+    candidates = [
+        Path("C:/Program Files/Blender Foundation/Blender 4.5/blender.exe"),
+        Path("C:/Program Files/Blender Foundation/Blender 4.4/blender.exe"),
+        Path("C:/Program Files/Blender Foundation/Blender 4.3/blender.exe"),
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return str(candidate)
+    return "blender"
+
+
+def build_mold_cam_batch(
+    output_dir: Path,
+    job_name: str,
+    blender_executable: str | None = None,
+    run_blender: bool = False,
+    strict_mode: bool = False,
+) -> list[Path]:
+    job_root, manifest, job_slug = load_mold_job_manifest(output_dir, job_name)
+    written: list[Path] = []
+
+    cam_script_path = job_root / f"{job_slug}_cam_batch.py"
+    write_text(cam_script_path, mold_cam_batch_script(job_root, manifest, job_slug, strict_mode=strict_mode))
+    written.append(cam_script_path)
+
+    run_script_path = job_root / f"{job_slug}_run_cam_batch.ps1"
+    write_text(run_script_path, mold_cam_runner_script(job_slug, cam_script_path))
+    written.append(run_script_path)
+
+    if run_blender:
+        resolved_blender = resolve_blender_executable(blender_executable)
+        result = subprocess.run(
+            [resolved_blender, "--background", "--python", str(cam_script_path)],
+            cwd=str(job_root),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+        log_dir = ensure_dir(job_root / "cam_output")
+        log_path = log_dir / f"{job_slug}_cam_batch.log"
+        log_text = (result.stdout or "")
+        if result.stderr:
+            log_text = f"{log_text}\n{result.stderr}" if log_text else result.stderr
+        write_text(log_path, log_text)
+        written.append(log_path)
+
+        if result.returncode != 0 or "CAM_BATCH_OK" not in log_text:
+            raise RuntimeError(
+                f"Blender CAM batch did not complete successfully (exit={result.returncode}). "
+                f"See log at {log_path}"
+            )
+
+    return written
+
+
 def build_gcode(output_dir: Path) -> list[Path]:
     gcode_dir = ensure_dir(output_dir / "gcode")
     written = []
@@ -1991,7 +2636,17 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate reusable Fabex workshop resources")
     parser.add_argument(
         "command",
-        choices=["presets", "templates", "gcode", "full-batch", "bootstrap-all", "install-presets", "bootstrap-and-install"],
+        choices=[
+            "presets",
+            "templates",
+            "gcode",
+            "full-batch",
+            "mold-job",
+            "mold-cam",
+            "bootstrap-all",
+            "install-presets",
+            "bootstrap-and-install",
+        ],
         help="What to generate",
     )
     parser.add_argument(
@@ -2003,6 +2658,49 @@ def parse_args() -> argparse.Namespace:
         "--fabex-root",
         default=str(default_fabex_preset_root()),
         help="Fabex preset root directory for installation",
+    )
+    parser.add_argument(
+        "--mold-type",
+        choices=["coin", "dogtag", "domino"],
+        default="coin",
+        help="Mold family to generate when command is mold-job",
+    )
+    parser.add_argument(
+        "--job-name",
+        default="coin_mold_job",
+        help="Output job name for mold-job generation",
+    )
+    parser.add_argument("--diameter-mm", type=float, default=None, help="Coin diameter for coin molds")
+    parser.add_argument("--width-mm", type=float, default=None, help="Part width for dogtag/domino molds")
+    parser.add_argument("--height-mm", type=float, default=None, help="Part height for dogtag/domino molds")
+    parser.add_argument("--thickness-mm", type=float, default=3.0, help="Part thickness/depth for mold cavity")
+    parser.add_argument("--corner-radius-mm", type=float, default=3.0, help="Corner radius for rectangular mold masters")
+    parser.add_argument("--hole-diameter-mm", type=float, default=3.5, help="Dogtag top-hole diameter")
+    parser.add_argument("--stock-margin-mm", type=float, default=6.0, help="Margin from cavity edge to mold stock edge")
+    parser.add_argument("--floor-thickness-mm", type=float, default=2.0, help="Material left under the cavity")
+    parser.add_argument("--cavity-clearance-mm", type=float, default=0.15, help="Extra clearance added around the part")
+    parser.add_argument(
+        "--material",
+        choices=sorted(DEFAULT_MATERIALS.keys()),
+        default="wax",
+        help="Material preset used for stack/gcode defaults",
+    )
+    parser.add_argument("--use-gn", action="store_true", help="Enable geometry nodes enhancement in generated mold script")
+    parser.add_argument("--gn-subdiv-level", type=int, default=1, help="Subdivision level for optional GN enhancement")
+    parser.add_argument(
+        "--run-blender",
+        action="store_true",
+        help="Run Blender in background for mold-cam after generating automation scripts",
+    )
+    parser.add_argument(
+        "--blender-executable",
+        default=None,
+        help="Optional explicit Blender executable path for mold-cam --run-blender",
+    )
+    parser.add_argument(
+        "--strict-cam",
+        action="store_true",
+        help="Fail mold-cam on CAM operation errors instead of using fallback G-code",
     )
     return parser.parse_args()
 
@@ -2019,6 +2717,32 @@ def main() -> None:
         written = build_gcode(output_dir)
     elif args.command == "full-batch":
         written = build_full_batch_profiles(output_dir)
+    elif args.command == "mold-job":
+        mold_job = MoldJob(
+            mold_type=args.mold_type,
+            name=args.job_name,
+            thickness_mm=args.thickness_mm,
+            material_name=args.material,
+            diameter_mm=args.diameter_mm,
+            width_mm=args.width_mm,
+            height_mm=args.height_mm,
+            corner_radius_mm=args.corner_radius_mm,
+            hole_diameter_mm=args.hole_diameter_mm,
+            stock_margin_mm=args.stock_margin_mm,
+            floor_thickness_mm=args.floor_thickness_mm,
+            cavity_clearance_mm=args.cavity_clearance_mm,
+            use_geometry_nodes=args.use_gn,
+            gn_subdiv_level=max(0, args.gn_subdiv_level),
+        )
+        written = build_mold_job(output_dir, mold_job)
+    elif args.command == "mold-cam":
+        written = build_mold_cam_batch(
+            output_dir=output_dir,
+            job_name=args.job_name,
+            blender_executable=args.blender_executable,
+            run_blender=args.run_blender,
+            strict_mode=args.strict_cam,
+        )
     elif args.command == "install-presets":
         build_presets(output_dir)
         written = install_presets(output_dir, fabex_root)

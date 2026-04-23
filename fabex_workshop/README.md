@@ -5,6 +5,7 @@ This toolkit generates three reusable resource types for Blender/Fabex workflows
 1. Fabex preset scripts for machines, tools, and operations.
 2. Parametric SVG and Blender script templates for rings, bezels, pendants, studs, and tray molds.
 3. Direct G-code for simple pockets and profile jobs.
+4. Parametric mold-job bundles for coin, dogtag, and domino workflows.
 
 ## Usage
 
@@ -16,6 +17,12 @@ python .\fabex_workshop\toolkit.py presets
 python .\fabex_workshop\toolkit.py templates
 python .\fabex_workshop\toolkit.py gcode
 python .\fabex_workshop\toolkit.py full-batch
+python .\fabex_workshop\toolkit.py mold-job --mold-type coin --job-name coin_38mm --diameter-mm 38 --thickness-mm 3.2
+python .\fabex_workshop\toolkit.py mold-job --mold-type dogtag --job-name dogtag_30x52 --width-mm 30 --height-mm 52 --thickness-mm 2.5 --use-gn
+python .\fabex_workshop\toolkit.py mold-job --mold-type domino --job-name domino_50x25 --width-mm 50 --height-mm 25 --thickness-mm 4.0 --corner-radius-mm 2.2
+python .\fabex_workshop\toolkit.py mold-cam --job-name domino_50x25
+python .\fabex_workshop\toolkit.py mold-cam --job-name domino_50x25 --run-blender
+python .\fabex_workshop\toolkit.py mold-cam --job-name domino_50x25 --run-blender --strict-cam
 ```
 
 Generated files are written to `fabex_workshop\output` by default.
@@ -133,3 +140,45 @@ The direct G-code layer now includes:
 - `full_batch\full_batch_summary.json`
 
 This layer creates per-family Fabex operation stacks and machine-specific G-code profile presets for all template families.
+
+### Mold Job Bundles (Phase 2 + Phase 3 Unified)
+
+`mold-job` is the programmable bridge from manual setup to automation. For each mold job, it writes a dedicated package to:
+
+- `output\mold_jobs\<job_name>\<job_name>_mold.py`
+- `output\mold_jobs\<job_name>\<job_name>_fabex_stack.json`
+- `output\mold_jobs\<job_name>\<job_name>_machine_profile.json`
+- `output\mold_jobs\<job_name>\<job_name>_roughing.nc`
+- `output\mold_jobs\<job_name>\<job_name>_manifest.json`
+
+Recommended manual-to-automation loop:
+
+1. Generate one mold job with explicit dimensions (`mold-job`).
+2. Open the generated `*_mold.py` in Blender and run with `Alt+P`.
+3. Confirm cavity dimensions and orientation manually.
+4. Load the generated Fabex stack/profile JSON values as CAM defaults.
+5. Validate a shallow/air pass from `*_roughing.nc`.
+6. Once validated, reuse command arguments to regenerate consistent jobs quickly.
+
+GN is optional in mold scripts (`--use-gn`). Keep GN off for strict dimensional repeatability and turn it on when you want smoother parametric shaping before CAM.
+
+### No-Click CAM Batch From Mold JSON
+
+`mold-cam` consumes an existing mold job manifest and creates automated Fabex CAM batch assets in the same job folder:
+
+- `<job_name>_cam_batch.py` (Blender background CAM script)
+- `<job_name>_run_cam_batch.ps1` (runner script)
+
+When run in Blender background, the CAM batch script will:
+
+1. enable Fabex
+2. build the mold geometry from the generated mold script
+3. create all CAM operations from the generated stack JSON
+4. calculate toolpaths and export per-operation G-code files
+5. write `cam_output\<job_name>_cam_report.json`
+
+This is the scripted path toward full automation. Manual work can stay focused on fixturing, zeroing, and first-pass validation.
+
+If Fabex path calculation/export fails for a given operation, the batch script now writes fallback G-code files from the generated roughing baseline and records that status in the CAM report. This keeps the pipeline usable while you tune Fabex-specific runtime issues.
+
+Use `--strict-cam` to disable fallback and fail-fast on any CAM operation error.
