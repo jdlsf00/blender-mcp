@@ -1,0 +1,68 @@
+{
+  "family": "tray_mold",
+  "category": "utility",
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+  "geometry": {
+    "width_mm": 100.0,
+    "height_mm": 70.0,
+    "depth_mm": 10.0,
+    "corner_radius_mm": 10.0,
+    "pocket_margin_mm": 7.0
+  },
+  "fabex_operation_stack": [
+    {
+      "operation_name": "tray_mold_01_roughing",
+      "strategy": "POCKET",
+      "material": "hardwood",
+      "recommended_tool_ids": [
+        "spetool_downcut_1_4in",
+        "spetool_downcut_1_8in",
+        "spetool_vbit_90deg"
+      ],
+      "stepdown_mm": 1.2,
+      "stepover_percent": 40.0,
+      "spindle_rpm": 10000,
+      "feed_rate_mm_min": 900.0,
+      "plunge_rate_mm_min": 250.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    },
+    {
+      "operation_name": "tray_mold_02_finishing",
+      "strategy": "PARALLEL",
+      "material": "hardwood",
+      "recommended_tool_ids": [
+        "spetool_downcut_1_4in",
+        "spetool_downcut_1_8in",
+        "spetool_vbit_90deg"
+      ],
+      "stepdown_mm": 0.4,
+      "stepover_percent": 20.0,
+      "spindle_rpm": 10000,
+      "feed_rate_mm_min": 900.0,
+      "plunge_rate_mm_min": 250.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    },
+    {
+      "operation_name": "tray_mold_03_cutout",
+      "strategy": "CUTOUT",
+      "material": "hardwood",
+      "recommended_tool_ids": [
+        "spetool_downcut_1_4in",
+        "spetool_downcut_1_8in",
+        "spetool_vbit_90deg"
+      ],
+      "stepdown_mm": 0.35,
+      "stepover_percent": 18.0,
+      "spindle_rpm": 10000,
+      "feed_rate_mm_min": 900.0,
+      "plunge_rate_mm_min": 250.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    }
+  ]
+}

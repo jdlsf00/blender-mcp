@@ -1,0 +1,67 @@
+{
+  "family": "stud_earring_blank",
+  "category": "earrings",
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+  "geometry": {
+    "diameter_mm": 10.0,
+    "thickness_mm": 2.0,
+    "pair_spacing_mm": 18.0,
+    "post_hole_mm": 0.9
+  },
+  "fabex_operation_stack": [
+    {
+      "operation_name": "stud_earring_blank_01_rough_pair",
+      "strategy": "POCKET",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_downcut_1_8in",
+        "spetool_vbit_20deg_fine"
+      ],
+      "stepdown_mm": 0.5,
+      "stepover_percent": 30.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 4
+    },
+    {
+      "operation_name": "stud_earring_blank_02_detail_pair",
+      "strategy": "PARALLEL",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_downcut_1_8in",
+        "spetool_vbit_20deg_fine"
+      ],
+      "stepdown_mm": 0.2,
+      "stepover_percent": 12.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 4
+    },
+    {
+      "operation_name": "stud_earring_blank_03_finish_pair",
+      "strategy": "CUTOUT",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_downcut_1_8in",
+        "spetool_vbit_20deg_fine"
+      ],
+      "stepdown_mm": 0.15,
+      "stepover_percent": 10.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 4
+    }
+  ]
+}

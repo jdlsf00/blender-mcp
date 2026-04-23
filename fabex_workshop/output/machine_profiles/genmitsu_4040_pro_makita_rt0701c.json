@@ -1,0 +1,36 @@
+{
+  "machine": {
+    "name": "Genmitsu_4040_PRO_Makita_RT0701C",
+    "post_processor": "GRBL",
+    "work_area_x_mm": 400.0,
+    "work_area_y_mm": 400.0,
+    "work_area_z_mm": 78.0,
+    "home_x_mm": 0.0,
+    "home_y_mm": 0.0,
+    "home_z_mm": 15.0,
+    "spindle_rpm": 18000,
+    "feed_rate_mm_min": 900.0,
+    "plunge_rate_mm_min": 250.0,
+    "rotary_axis": "X",
+    "axis_4": false,
+    "spindle_min_rpm": 10000,
+    "spindle_max_rpm": 30000,
+    "controller": "Genmitsu GRBL Controller",
+    "spindle_model": "Makita RT0701C"
+  },
+  "router": {
+    "model": "Makita RT0701C",
+    "power": "120V 6.5A",
+    "speed_range_rpm": [
+      10000,
+      30000
+    ],
+    "collet": "1/4in (6.35mm)",
+    "mount": "Genmitsu 4040-PRO stock router mount",
+    "notes": "Speed dial scales to router RPM. Calibrate actual RPM for your dial marks."
+  },
+  "notes": [
+    "Generated for Genmitsu 4040-PRO workflows using Makita RT0701C.",
+    "Validate zeroing, workholding, and tool stickout for each job."
+  ]
+}

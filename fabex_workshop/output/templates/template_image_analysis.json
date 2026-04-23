@@ -1,0 +1,329 @@
+{
+  "template_count": 17,
+  "all_valid": true,
+  "analysis": [
+    {
+      "template": "bangle_blank",
+      "valid": true,
+      "purpose": "Closed circular bracelet blank sized for bangle workflows.",
+      "svg": {
+        "file": "bangle_blank.svg",
+        "viewBox": [
+          -51.0,
+          -51.0,
+          102.0,
+          102.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "basket_pendant",
+      "valid": true,
+      "purpose": "Pendant with central basket seat and bail hole for stone-focused designs.",
+      "svg": {
+        "file": "basket_pendant.svg",
+        "viewBox": [
+          -22.0,
+          -22.0,
+          44.0,
+          44.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 3,
+        "path_data_count": 3,
+        "valid": true
+      }
+    },
+    {
+      "template": "bezel_pocket",
+      "valid": true,
+      "purpose": "Rectangular bezel seat pocket for cabochons or faceted stones.",
+      "svg": {
+        "file": "bezel_pocket.svg",
+        "viewBox": [
+          -20.0,
+          -18.0,
+          40.0,
+          36.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "coin_blank",
+      "valid": true,
+      "purpose": "Coin or medallion blank for engraving and commemorative motifs.",
+      "svg": {
+        "file": "coin_blank.svg",
+        "viewBox": [
+          -25.0,
+          -25.0,
+          50.0,
+          50.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 1,
+        "path_data_count": 1,
+        "valid": true
+      }
+    },
+    {
+      "template": "cuff_blank",
+      "valid": true,
+      "purpose": "Flat cuff strip blank intended for forming and wrist curvature.",
+      "svg": {
+        "file": "cuff_blank.svg",
+        "viewBox": [
+          -89.0,
+          -23.0,
+          178.0,
+          46.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 1,
+        "path_data_count": 1,
+        "valid": true
+      }
+    },
+    {
+      "template": "dogtag_blank",
+      "valid": true,
+      "purpose": "Dog-tag profile blank with top hole for chains and ID-style pendants.",
+      "svg": {
+        "file": "dogtag_blank.svg",
+        "viewBox": [
+          -23.0,
+          -34.0,
+          46.0,
+          68.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "gallery_ring",
+      "valid": true,
+      "purpose": "Ring blank with elevated gallery top for settings or decorative seats.",
+      "svg": {
+        "file": "gallery_ring.svg",
+        "viewBox": [
+          -22.0,
+          -22.0,
+          44.0,
+          44.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 3,
+        "path_data_count": 3,
+        "valid": true
+      }
+    },
+    {
+      "template": "hoop_earring",
+      "valid": true,
+      "purpose": "Paired hoop earring profiles with configurable wire thickness.",
+      "svg": {
+        "file": "hoop_earring.svg",
+        "viewBox": [
+          -37.0,
+          -22.0,
+          74.0,
+          44.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 4,
+        "path_data_count": 4,
+        "valid": true
+      }
+    },
+    {
+      "template": "oval_bezel_pocket",
+      "valid": true,
+      "purpose": "Oval bezel seat for elongated stones and navette-inspired layouts.",
+      "svg": {
+        "file": "oval_bezel_pocket.svg",
+        "viewBox": [
+          -20.0,
+          -23.0,
+          40.0,
+          46.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "pendant_blank",
+      "valid": true,
+      "purpose": "General pendant blank with bail hole for medallion-style pieces.",
+      "svg": {
+        "file": "pendant_blank.svg",
+        "viewBox": [
+          -23.0,
+          -27.0,
+          46.0,
+          54.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "pierced_bezel_ring",
+      "valid": true,
+      "purpose": "Ring blank with pierced bezel area for openwork and lighter settings.",
+      "svg": {
+        "file": "pierced_bezel_ring.svg",
+        "viewBox": [
+          -22.0,
+          -22.0,
+          44.0,
+          44.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 13,
+        "path_data_count": 13,
+        "valid": true
+      }
+    },
+    {
+      "template": "ring_band",
+      "valid": true,
+      "purpose": "purpose not documented",
+      "svg": {
+        "file": "ring_band_blank.svg",
+        "viewBox": [
+          -22.0,
+          -22.0,
+          44.0,
+          44.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "round_bezel_pocket",
+      "valid": true,
+      "purpose": "Round bezel seat for coin-cut or circular stones.",
+      "svg": {
+        "file": "round_bezel_pocket.svg",
+        "viewBox": [
+          -18.0,
+          -18.0,
+          36.0,
+          36.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "signet_blank",
+      "valid": true,
+      "purpose": "Flat-faced signet starter for crest, monogram, or relief carving.",
+      "svg": {
+        "file": "signet_blank.svg",
+        "viewBox": [
+          -23.0,
+          -23.0,
+          46.0,
+          46.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    },
+    {
+      "template": "stud_earring_blank",
+      "valid": true,
+      "purpose": "Paired stud blanks for mirrored earring production.",
+      "svg": {
+        "file": "stud_earring_blank.svg",
+        "viewBox": [
+          -14.0,
+          -14.0,
+          28.0,
+          28.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 4,
+        "path_data_count": 4,
+        "valid": true
+      }
+    },
+    {
+      "template": "toggle_bracelet_blank",
+      "valid": true,
+      "purpose": "Toggle bar and ring starter geometry for clasp component workflows.",
+      "svg": {
+        "file": "toggle_bracelet_blank.svg",
+        "viewBox": [
+          -31.0,
+          -17.0,
+          62.0,
+          34.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 3,
+        "path_data_count": 3,
+        "valid": true
+      }
+    },
+    {
+      "template": "tray_mold",
+      "valid": true,
+      "purpose": "Utility tray mold blank for small castable or press-form parts.",
+      "svg": {
+        "file": "tray_mold.svg",
+        "viewBox": [
+          -60.0,
+          -45.0,
+          120.0,
+          90.0
+        ],
+        "width_ok": true,
+        "height_ok": true,
+        "path_count": 2,
+        "path_data_count": 2,
+        "valid": true
+      }
+    }
+  ]
+}

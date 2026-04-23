@@ -1,0 +1,68 @@
+{
+  "family": "gallery_ring",
+  "category": "rings",
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+  "geometry": {
+    "outer_diameter_mm": 24.0,
+    "inner_diameter_mm": 18.2,
+    "gallery_width_mm": 14.0,
+    "gallery_height_mm": 8.0,
+    "shank_thickness_mm": 2.4
+  },
+  "fabex_operation_stack": [
+    {
+      "operation_name": "gallery_ring_01_rough_profile",
+      "strategy": "POCKET",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_ballnose_r1_16",
+        "spetool_downcut_1_8in"
+      ],
+      "stepdown_mm": 0.8,
+      "stepover_percent": 35.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 4
+    },
+    {
+      "operation_name": "gallery_ring_02_detail_contour",
+      "strategy": "PARALLEL",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_ballnose_r1_16",
+        "spetool_downcut_1_8in"
+      ],
+      "stepdown_mm": 0.35,
+      "stepover_percent": 16.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 4
+    },
+    {
+      "operation_name": "gallery_ring_03_finish_wall",
+      "strategy": "CUTOUT",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_ballnose_r1_16",
+        "spetool_downcut_1_8in"
+      ],
+      "stepdown_mm": 0.2,
+      "stepover_percent": 10.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 4
+    }
+  ]
+}

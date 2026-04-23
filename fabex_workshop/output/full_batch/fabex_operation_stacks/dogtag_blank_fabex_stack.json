@@ -1,0 +1,68 @@
+{
+  "family": "dogtag_blank",
+  "category": "pendants",
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+  "geometry": {
+    "width_mm": 28.0,
+    "height_mm": 50.0,
+    "thickness_mm": 2.0,
+    "corner_radius_mm": 6.0,
+    "hole_diameter_mm": 3.5
+  },
+  "fabex_operation_stack": [
+    {
+      "operation_name": "dogtag_blank_01_rough_face",
+      "strategy": "POCKET",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_downcut_1_8in",
+        "spetool_vbit_60deg",
+        "spetool_ballnose_r1_16"
+      ],
+      "stepdown_mm": 0.8,
+      "stepover_percent": 35.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    },
+    {
+      "operation_name": "dogtag_blank_02_detail_face",
+      "strategy": "PARALLEL",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_downcut_1_8in",
+        "spetool_vbit_60deg",
+        "spetool_ballnose_r1_16"
+      ],
+      "stepdown_mm": 0.3,
+      "stepover_percent": 15.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    },
+    {
+      "operation_name": "dogtag_blank_03_edge_cutout",
+      "strategy": "CUTOUT",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_downcut_1_8in",
+        "spetool_vbit_60deg",
+        "spetool_ballnose_r1_16"
+      ],
+      "stepdown_mm": 0.4,
+      "stepover_percent": 20.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    }
+  ]
+}

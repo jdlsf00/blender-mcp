@@ -1,0 +1,68 @@
+{
+  "family": "oval_bezel_pocket",
+  "category": "bezels",
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+  "geometry": {
+    "outer_width_mm": 22.0,
+    "outer_height_mm": 28.0,
+    "stone_width_mm": 16.0,
+    "stone_height_mm": 22.0,
+    "depth_mm": 5.0
+  },
+  "fabex_operation_stack": [
+    {
+      "operation_name": "oval_bezel_pocket_01_rough_seat",
+      "strategy": "POCKET",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_vbit_30deg",
+        "spetool_downcut_1_8in"
+      ],
+      "stepdown_mm": 0.5,
+      "stepover_percent": 28.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    },
+    {
+      "operation_name": "oval_bezel_pocket_02_bezel_detail",
+      "strategy": "PARALLEL",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_vbit_30deg",
+        "spetool_downcut_1_8in"
+      ],
+      "stepdown_mm": 0.2,
+      "stepover_percent": 12.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    },
+    {
+      "operation_name": "oval_bezel_pocket_03_seat_finish",
+      "strategy": "CUTOUT",
+      "material": "wax",
+      "recommended_tool_ids": [
+        "spetool_ballnose_r1_32",
+        "spetool_vbit_30deg",
+        "spetool_downcut_1_8in"
+      ],
+      "stepdown_mm": 0.15,
+      "stepover_percent": 10.0,
+      "spindle_rpm": 12000,
+      "feed_rate_mm_min": 700.0,
+      "plunge_rate_mm_min": 180.0,
+      "safe_z_mm": 5.0,
+      "entry_style": "ramp",
+      "tabs": 0
+    }
+  ]
+}

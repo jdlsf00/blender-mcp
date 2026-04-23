@@ -1,0 +1,108 @@
+{
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c.json",
+  "bit_library": "genmitsu_4040_pro_makita_bits.json",
+  "families": {
+    "ring_band": {
+      "category": "rings",
+      "stack_file": "ring_band_fabex_stack.json",
+      "gcode_profile_file": "ring_band_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "tray_mold": {
+      "category": "utility",
+      "stack_file": "tray_mold_fabex_stack.json",
+      "gcode_profile_file": "tray_mold_genmitsu4040_makita_profile.json",
+      "default_material": "hardwood"
+    },
+    "signet_blank": {
+      "category": "rings",
+      "stack_file": "signet_blank_fabex_stack.json",
+      "gcode_profile_file": "signet_blank_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "bezel_pocket": {
+      "category": "bezels",
+      "stack_file": "bezel_pocket_fabex_stack.json",
+      "gcode_profile_file": "bezel_pocket_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "pendant_blank": {
+      "category": "pendants",
+      "stack_file": "pendant_blank_fabex_stack.json",
+      "gcode_profile_file": "pendant_blank_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "oval_bezel_pocket": {
+      "category": "bezels",
+      "stack_file": "oval_bezel_pocket_fabex_stack.json",
+      "gcode_profile_file": "oval_bezel_pocket_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "stud_earring_blank": {
+      "category": "earrings",
+      "stack_file": "stud_earring_blank_fabex_stack.json",
+      "gcode_profile_file": "stud_earring_blank_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "coin_blank": {
+      "category": "pendants",
+      "stack_file": "coin_blank_fabex_stack.json",
+      "gcode_profile_file": "coin_blank_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "round_bezel_pocket": {
+      "category": "bezels",
+      "stack_file": "round_bezel_pocket_fabex_stack.json",
+      "gcode_profile_file": "round_bezel_pocket_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "bangle_blank": {
+      "category": "bracelets",
+      "stack_file": "bangle_blank_fabex_stack.json",
+      "gcode_profile_file": "bangle_blank_genmitsu4040_makita_profile.json",
+      "default_material": "hardwood"
+    },
+    "dogtag_blank": {
+      "category": "pendants",
+      "stack_file": "dogtag_blank_fabex_stack.json",
+      "gcode_profile_file": "dogtag_blank_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "cuff_blank": {
+      "category": "bracelets",
+      "stack_file": "cuff_blank_fabex_stack.json",
+      "gcode_profile_file": "cuff_blank_genmitsu4040_makita_profile.json",
+      "default_material": "hardwood"
+    },
+    "gallery_ring": {
+      "category": "rings",
+      "stack_file": "gallery_ring_fabex_stack.json",
+      "gcode_profile_file": "gallery_ring_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "basket_pendant": {
+      "category": "pendants",
+      "stack_file": "basket_pendant_fabex_stack.json",
+      "gcode_profile_file": "basket_pendant_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "pierced_bezel_ring": {
+      "category": "rings",
+      "stack_file": "pierced_bezel_ring_fabex_stack.json",
+      "gcode_profile_file": "pierced_bezel_ring_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "hoop_earring": {
+      "category": "earrings",
+      "stack_file": "hoop_earring_fabex_stack.json",
+      "gcode_profile_file": "hoop_earring_genmitsu4040_makita_profile.json",
+      "default_material": "wax"
+    },
+    "toggle_bracelet_blank": {
+      "category": "bracelets",
+      "stack_file": "toggle_bracelet_blank_fabex_stack.json",
+      "gcode_profile_file": "toggle_bracelet_blank_genmitsu4040_makita_profile.json",
+      "default_material": "hardwood"
+    }
+  }
+}

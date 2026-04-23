@@ -1,0 +1,108 @@
+{
+  "machine_profile": "genmitsu_4040_pro_makita_rt0701c",
+  "bit_library": [
+    {
+      "tool_id": "spetool_downcut_1_4in",
+      "label": "SP-1/4 Dia1/4 W04019",
+      "category": "downcut_endmill",
+      "diameter_mm": 6.35,
+      "shank_mm": 6.35,
+      "flutes": 2,
+      "coating": "SPE-X"
+    },
+    {
+      "tool_id": "spetool_downcut_1_8in",
+      "label": "SP-1/8 Dia1/4",
+      "category": "downcut_endmill",
+      "diameter_mm": 3.175,
+      "shank_mm": 6.35,
+      "flutes": 2,
+      "coating": "SPE-X"
+    },
+    {
+      "tool_id": "spetool_vbit_20deg_fine",
+      "label": "D1/4-20deg-0.005 W06008",
+      "category": "vbit",
+      "tip_mm": 0.127,
+      "angle_deg": 20.0,
+      "shank_mm": 6.35,
+      "coating": "SPE-X"
+    },
+    {
+      "tool_id": "spetool_vbit_30deg",
+      "label": "ECP4F-D1/4 W06021 30deg",
+      "category": "vbit",
+      "angle_deg": 30.0,
+      "shank_mm": 6.35
+    },
+    {
+      "tool_id": "spetool_vbit_60deg",
+      "label": "ECP4F-D1/4 W06006 60deg",
+      "category": "vbit",
+      "angle_deg": 60.0,
+      "shank_mm": 6.35
+    },
+    {
+      "tool_id": "spetool_vbit_90deg",
+      "label": "ECP4F-D1/4 W06007 90deg",
+      "category": "vbit",
+      "angle_deg": 90.0,
+      "shank_mm": 6.35
+    },
+    {
+      "tool_id": "spetool_ballnose_r1_32",
+      "label": "R1/32 W01015",
+      "category": "ballnose",
+      "radius_mm": 0.79375,
+      "shank_mm": 6.35
+    },
+    {
+      "tool_id": "spetool_ballnose_r1_16",
+      "label": "R1/16 W01014",
+      "category": "ballnose",
+      "radius_mm": 1.5875,
+      "shank_mm": 6.35,
+      "coating": "ZrN"
+    },
+    {
+      "tool_id": "spetool_ballnose_r0_25",
+      "label": "R0.25 W01005",
+      "category": "ballnose",
+      "radius_mm": 0.25,
+      "shank_mm": 6.35,
+      "coating": "H-Si"
+    },
+    {
+      "tool_id": "spetool_ballnose_r0_5",
+      "label": "R0.5 W01007",
+      "category": "ballnose",
+      "radius_mm": 0.5,
+      "shank_mm": 6.35,
+      "coating": "H-Si"
+    },
+    {
+      "tool_id": "spetool_ballnose_r1_0",
+      "label": "R1.0 W01011",
+      "category": "ballnose",
+      "radius_mm": 1.0,
+      "shank_mm": 6.35,
+      "coating": "H-Si"
+    },
+    {
+      "tool_id": "spetool_ballnose_r1_5",
+      "label": "R1.5 W01013",
+      "category": "ballnose",
+      "radius_mm": 1.5,
+      "shank_mm": 6.35,
+      "coating": "H-Si"
+    },
+    {
+      "tool_id": "router_bit_set_1_4in_mixed",
+      "label": "1/4in shank woodworking router bit assortment (from photo)",
+      "category": "wood_router_bits",
+      "shank_mm": 6.35,
+      "notes": "Includes profile, roundover, straight, and chamfer styles. Validate geometry before CNC contouring."
+    }
+  ],
+  "source": "User-supplied tool photos and label transcription."
+}

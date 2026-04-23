@@ -1,0 +1,106 @@
+{
+  "ring_band": {
+    "outer_diameter_mm": 24.0,
+    "inner_diameter_mm": 18.2,
+    "thickness_mm": 6.0,
+    "note": "Starter ring blank near US size 8."
+  },
+  "tray_mold": {
+    "width_mm": 100.0,
+    "height_mm": 70.0,
+    "depth_mm": 10.0,
+    "corner_radius_mm": 10.0,
+    "pocket_margin_mm": 7.0
+  },
+  "signet_blank": {
+    "face_width_mm": 16.0,
+    "face_height_mm": 13.0,
+    "inner_diameter_mm": 19.0,
+    "shank_depth_mm": 5.5
+  },
+  "bezel_pocket": {
+    "outer_width_mm": 20.0,
+    "outer_height_mm": 16.0,
+    "stone_width_mm": 16.0,
+    "stone_height_mm": 12.0,
+    "depth_mm": 5.0
+  },
+  "pendant_blank": {
+    "width_mm": 28.0,
+    "height_mm": 36.0,
+    "thickness_mm": 3.0,
+    "bail_hole_mm": 3.0
+  },
+  "oval_bezel_pocket": {
+    "outer_width_mm": 22.0,
+    "outer_height_mm": 28.0,
+    "stone_width_mm": 16.0,
+    "stone_height_mm": 22.0,
+    "depth_mm": 5.0
+  },
+  "stud_earring_blank": {
+    "diameter_mm": 10.0,
+    "thickness_mm": 2.0,
+    "pair_spacing_mm": 18.0,
+    "post_hole_mm": 0.9
+  },
+  "coin_blank": {
+    "diameter_mm": 32.0,
+    "thickness_mm": 3.0
+  },
+  "round_bezel_pocket": {
+    "outer_diameter_mm": 18.0,
+    "stone_diameter_mm": 14.0,
+    "depth_mm": 4.5
+  },
+  "bangle_blank": {
+    "outer_diameter_mm": 78.0,
+    "inner_diameter_mm": 64.0,
+    "width_mm": 18.0
+  },
+  "dogtag_blank": {
+    "width_mm": 28.0,
+    "height_mm": 50.0,
+    "thickness_mm": 2.0,
+    "corner_radius_mm": 6.0,
+    "hole_diameter_mm": 3.5
+  },
+  "cuff_blank": {
+    "length_mm": 160.0,
+    "width_mm": 28.0,
+    "thickness_mm": 2.0,
+    "corner_radius_mm": 5.0
+  },
+  "gallery_ring": {
+    "outer_diameter_mm": 24.0,
+    "inner_diameter_mm": 18.2,
+    "gallery_width_mm": 14.0,
+    "gallery_height_mm": 8.0,
+    "shank_thickness_mm": 2.4
+  },
+  "basket_pendant": {
+    "outer_diameter_mm": 24.0,
+    "seat_diameter_mm": 16.0,
+    "thickness_mm": 2.6,
+    "bail_hole_mm": 2.8
+  },
+  "pierced_bezel_ring": {
+    "outer_diameter_mm": 24.0,
+    "inner_diameter_mm": 18.2,
+    "bezel_diameter_mm": 10.0,
+    "shank_thickness_mm": 2.4,
+    "pierce_count": 10
+  },
+  "hoop_earring": {
+    "outer_diameter_mm": 22.0,
+    "wire_diameter_mm": 2.0,
+    "pair_spacing_mm": 30.0
+  },
+  "toggle_bracelet_blank": {
+    "length_mm": 24.0,
+    "width_mm": 4.0,
+    "thickness_mm": 2.0,
+    "ring_outer_mm": 14.0,
+    "ring_inner_mm": 9.0
+  }
+}
