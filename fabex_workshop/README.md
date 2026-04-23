@@ -78,6 +78,37 @@ The `.svg` files are useful as importable outlines. The `.py` files create simpl
 
 `index.html` gives you a one-page preview of every generated SVG template.
 
+### Where To Find Jewelry Templates In Blender
+
+Jewelry templates are not shown in the Fabex machine/cutter/operation preset dropdowns.
+
+Use either workflow:
+
+1. Open `fabex_workshop\output\templates\index.html` to browse families and pick a template.
+2. In Blender, open the paired `*.py` template script in the Text Editor and run it with `Alt+P`.
+3. Or import the paired `*.svg` outline for profile-based workflows.
+
+Fabex dropdowns are only for:
+
+- machine presets (`cam_machines`)
+- cutter presets (`cam_cutters`)
+- operation presets (`cam_operations`)
+
+### Geometry Nodes (Optional Enhancement)
+
+The following template scripts now include optional Geometry Nodes enhancement blocks:
+
+- `ring_band_blank.py`
+- `bezel_pocket.py`
+- `pendant_blank.py`
+
+Each script defines:
+
+- `USE_GEOMETRY_NODES = True`
+
+Set that flag to `False` if you want pure mesh/boolean output only.
+Fabex/CAM flows remain compatible either way.
+
 ### Direct G-code
 
 - `rectangular_pocket.nc`
